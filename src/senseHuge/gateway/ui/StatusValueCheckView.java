@@ -27,115 +27,150 @@ import android.view.View;
 @SuppressLint({ "DrawAllocation", "FloatMath" })
 public class StatusValueCheckView extends View {
 
-	public float s = 500;// 默认中间线位置
-	private boolean isTouched = false;// 中间线点击位置变化控制
+	float s = 500;// 默认中间线位置
+	boolean isTouched = false;// 中间线点击位置变化控制
 
-	private String[] SPPED_SCALES1 = new String[6];// { "0", "10", "20","30",
-													// "40","120"};
-	private String[] dates1 = new String[] { "1", "2", "3", "4", "5", "6", "7",
-			"8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18",
-			"19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
-			"30", "31" };
-	// 这3组只是[替代数据]-非真实数据,仅仅是为了在绘图过程中方便[查看效果]。
-	// public float[] firstPoints = {33, 14, 21, 11, 40, 15, 39 ,8, 45, 35,33,
-	// 14, 21, 11, 40,
-	// 15, 39 ,8, 45, 35,33, 14, 21, 11, 40, 15, 39 ,8, 45, 35,22};
-	public float[] firstPoints = { 0, 20, 30, 40, 50, 60, 70, 60, 70, 70, 70,
-			40, 30, 20, 10, 10, 20, 30, 40, 50, 60, 70, 80, 70, 60, 50, 40, 30,
-			20, 10, 10, 20, 30, 40, 50, 60, 70, 80, 70, 60, 50, 40, 30, 20, 10 };
-	public float[] secondPoints = { 14, 31, 11, 21, 15, 40, 8, 30, 13, 45, 14,
-			31, 11, 21, 15, 40, 8, 30, 13, 45, 14, 31, 11, 21, 15, 40, 8, 30,
-			13, 45, 20 };
-	public float[] thirdPoints = { 40, 47, 11, 38, 21, 14, 37, 29, 31, 32, 15,
-			49, 20, 47, 11, 38, 21, 14, 37, 29, 31, 32, 15, 49, 20, 47, 11, 38,
-			21, 14, 37 };
+	private int XOrigin = 40;// X轴起点
+	private int YOrigin = 330;// y轴起点
+	private int XLength = 500;// X轴长度
+	private int YLength = 300;// Y轴长度
+	private String[] XLabel; // X的刻度显示
+	private String[] YLabel; // Y的刻度显示
+	private float[] Data; // 数据
+	private String Title; // 显示的标题
+	private String xTitle;
+	private String yTitle;
+	private float screenW, screenH;
+	float xScale;
+	float yScale;
 
-	private Paint linePaint = new Paint();// 背景线。
+	private Paint backLinePaint = new Paint();// 背景线。
 	private Paint textPaint = new Paint();// 文字
-	private Paint yChartPaint = new Paint();// Y轴标题。
-	private Paint circleRedBlueGreenPaint = new Paint();// 环形画笔。
+	private Paint yTitlePaint = new Paint();// Y轴标题。
+	private Paint xTitlePaint = new Paint();// x轴标题。
+	private Paint titlePaint = new Paint();// 标题。
+	private Paint circleRGBPaint = new Paint();// 环形画笔。
 	private Paint circelPaint = new Paint();// 拐点圆圈。
 	private Paint innerCircelPaint = new Paint();// 内圆。
-	private Paint chartLinePaint = new Paint();// 第一条线
-	private Paint secondChartPaint = new Paint();// 第二条线。
-	private Paint thirdChartPaint = new Paint();// 第三条线。
+	private Paint linePaint = new Paint();// 第一条线
 	private Paint centerLinePaint = new Paint();// 中间竖线。
 
-	// private String totalChartNum = "1132";
-	// private String tongbiRatio = "0.19%";
-	// private String huanbiRatio = "3.92%";
-
-	private int leftDirectionId = 1;// 上面箭头方向。
-	private int rightDirectionId = 1;// 下面箭头方向
-
-	public StatusValueCheckView(Context context) {
-		// TODO Auto-generated constructor stub
-		super(context);
+	public void setTitle(String title, String xTitle, String yTitle) {
+		this.setTitle(Title);
+		this.setxTitle(xTitle);
+		this.setyTitle(yTitle);
 	}
 
-	public StatusValueCheckView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-
-	}
-
-	public StatusValueCheckView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
-
-	// setters
-	// public void setTotalChartNum(String totalChartNum) {
-	// this.totalChartNum = totalChartNum;
-	// }
-
-	// public void setTongbiRatio(String tongbiRatio) {
-	// this.tongbiRatio = tongbiRatio;
-	// }
-	//
-	// public void setHuanbiRatio(String huanbiRatio) {
-	// this.huanbiRatio = huanbiRatio;
-	// }
-
-	// 控制上下箭头的指向。
-	public void setLeftArrowDirection(int upDirectionId) {
-		this.leftDirectionId = upDirectionId;
-	}
-
-	public void setRightArrowDirection(int downDirectionId) {
-		this.rightDirectionId = downDirectionId;
-	}
-
-	// 进行真实数据赋值。
-	public void setData(float[] firstPoints, float[] secondPoints,
-			float[] thirdPoints) {
-		this.firstPoints = firstPoints;
-		this.secondPoints = secondPoints;
-		this.thirdPoints = thirdPoints;
+	public void setData(String[] xLabel, String[] yLabel, float[] data) {
+		this.setXLabel(xLabel);
+		this.setYLabel(yLabel);
+		this.setData(data);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		// 绘制模式-虚线作为背景线。
-		PathEffect effect = new DashPathEffect(new float[] { 6, 6, 6, 6, 6 }, 2);
-		// 背景虚线路径.
-		Path path = new Path();
+		initPaint();
+		// 画y轴
+		canvas.drawLine(XOrigin, YOrigin - YLength, XOrigin, YOrigin,
+				backLinePaint); // 轴线
+		yScale = getYScale();
+		for (int i = 0; i < this.YLabel.length; i++) {
+			canvas.drawLine(XOrigin, YOrigin - i * yScale, XOrigin + 5, YOrigin
+					- i * yScale, backLinePaint); // 刻度
+			try {
+				canvas.drawText(YLabel[i], XOrigin - 20, YOrigin - i * yScale
+						+ 5, textPaint); // 文字
+			} catch (Exception e) {
+			}
+		}
+		canvas.drawLine(XOrigin, YOrigin - YLength, XOrigin - 3, YOrigin
+				- YLength + 6, backLinePaint); // 箭头
+		canvas.drawLine(XOrigin, YOrigin - YLength, XOrigin + 3, YOrigin
+				- YLength + 6, backLinePaint);
+		// 设置X轴
+		xScale = getXScale();
+		canvas.drawLine(XOrigin, YOrigin, XOrigin + XLength, YOrigin,
+				backLinePaint); // 轴线
+		for (int i = 0; i < this.XLabel.length; i++) {
+			canvas.drawLine(XOrigin + i * xScale, YOrigin,
+					XOrigin + i * xScale, YOrigin - 5, backLinePaint); // 刻度
+			try {
+				canvas.drawText(XLabel[i], XOrigin + i * xScale - 10,
+						YOrigin + 20, textPaint); // 文字
+				// 数据值
+				if (i > 0 && YCoord(Data[i - 1]) != -999
+						&& YCoord(Data[i]) != -999) // 保证有效数据
+					canvas.drawLine(XOrigin + (i - 1) * xScale,
+							YCoord(Data[i - 1]), XOrigin + i * xScale,
+							YCoord(Data[i]), linePaint);
+				canvas.drawCircle(XOrigin + i * xScale, YCoord(Data[i]), 2,
+						backLinePaint);
+				canvas.drawText(String.valueOf(Data[i]), XOrigin + i * xScale, YCoord(Data[i])-10, textPaint);
+			} catch (Exception e) {
+			}
+		}
+		canvas.drawLine(XOrigin + XLength, YOrigin, XOrigin + XLength - 6,
+				YOrigin - 3, backLinePaint); // 箭头
+		canvas.drawLine(XOrigin + XLength, YOrigin, XOrigin + XLength - 6,
+				YOrigin + 3, backLinePaint);
+	}
 
-		linePaint.setStyle(Style.STROKE);
-		linePaint.setStrokeWidth((float) 0.7);
-		linePaint.setColor(Color.BLACK);
-		linePaint.setAntiAlias(true);// 锯齿不显示
+	private float YCoord(float data2) // 计算绘制时的Y坐标，无数据时返回-999
+	{
+		float y;
+		try {
+			y = data2;
+		} catch (Exception e) {
+			return -999; // 出错则返回-999
+		}
+		try {
+			return YOrigin - y * yScale / Integer.parseInt(YLabel[1]);
+		} catch (Exception e) {
+		}
+		return y;
+	}
+
+	private float getXScale() {
+		// TODO Auto-generated method stub
+		return this.getXLength() / this.getXLabel().length;
+	}
+
+	private float getYScale() {
+		// TODO Auto-generated method stub
+		return this.getYLength() / this.getYLabel().length;
+	}
+
+	private void initPaint() {
+		// TODO Auto-generated method stub
+		backLinePaint.setStyle(Style.STROKE);
+		backLinePaint.setStrokeWidth((float) 0.7);
+		backLinePaint.setColor(Color.BLACK);
+		backLinePaint.setAntiAlias(true);// 锯齿不显示
 		textPaint.setStyle(Style.FILL);// 设置非填充
 		textPaint.setStrokeWidth(1);// 笔宽5像素
 		textPaint.setColor(Color.BLACK);// 设置为蓝笔
 		textPaint.setAntiAlias(true);// 锯齿不显示
 		textPaint.setTextAlign(Align.CENTER);
 		textPaint.setTextSize(15);
-		yChartPaint.setStyle(Style.FILL);
-		yChartPaint.setStrokeWidth(1);
-		yChartPaint.setColor(Color.BLACK);
-		yChartPaint.setAntiAlias(true);
-		yChartPaint.setTextAlign(Align.CENTER);
-		yChartPaint.setTextSize(18);
+		yTitlePaint.setStyle(Style.FILL);
+		yTitlePaint.setStrokeWidth(1);
+		yTitlePaint.setColor(Color.BLACK);
+		yTitlePaint.setAntiAlias(true);
+		yTitlePaint.setTextAlign(Align.CENTER);
+		yTitlePaint.setTextSize(18);
+		xTitlePaint.setStyle(Style.FILL);
+		xTitlePaint.setStrokeWidth(1);
+		xTitlePaint.setColor(Color.BLACK);
+		xTitlePaint.setAntiAlias(true);
+		xTitlePaint.setTextAlign(Align.CENTER);
+		xTitlePaint.setTextSize(18);
+		titlePaint.setStyle(Style.FILL);
+		titlePaint.setStrokeWidth(1);
+		titlePaint.setColor(Color.BLACK);
+		titlePaint.setAntiAlias(true);
+		titlePaint.setTextAlign(Align.CENTER);
+		titlePaint.setTextSize(18);
 		circelPaint.setStyle(Style.FILL);
 		circelPaint.setStrokeWidth(2);
 		circelPaint.setColor(Color.YELLOW);
@@ -144,304 +179,27 @@ public class StatusValueCheckView extends View {
 		innerCircelPaint.setStrokeWidth(1);
 		innerCircelPaint.setColor(Color.parseColor("#464646"));
 		innerCircelPaint.setAntiAlias(true);
-		chartLinePaint.setStyle(Style.FILL);
-		chartLinePaint.setStrokeWidth(3);
-		chartLinePaint.setColor(Color.rgb(255, 210, 0));// (1)黄色
-		chartLinePaint.setAntiAlias(true);
-		secondChartPaint.setStyle(Style.FILL);
-		secondChartPaint.setStrokeWidth(3);
-		secondChartPaint.setColor(Color.rgb(169, 222, 63));// (2)绿色
-		secondChartPaint.setAntiAlias(true);
-		thirdChartPaint.setColor(Color.rgb(108, 212, 255));// (3)蓝色
-		thirdChartPaint.setStrokeWidth(3);
-		thirdChartPaint.setStyle(Style.FILL);
-		thirdChartPaint.setAntiAlias(true);
+		linePaint.setStyle(Style.FILL);
+		linePaint.setStrokeWidth(3);
+		linePaint.setColor(Color.rgb(255, 210, 0));// (1)黄色
+		linePaint.setAntiAlias(true);
+
 		centerLinePaint.setColor(Color.parseColor("#000000"));// 中间动态线。7DA62D
 		centerLinePaint.setStrokeWidth(3);
 
-		circleRedBlueGreenPaint.setStrokeWidth(6);
-		circleRedBlueGreenPaint.setAntiAlias(true);// 消除锯齿。
-		circleRedBlueGreenPaint.setStyle(Style.STROKE);
-		circleRedBlueGreenPaint.setColor(Color.parseColor("#4692B1"));//
-
-		// TODO 算Y轴的刻度。
-		float tempLine1Max = getMaxNumFromArr(firstPoints);
-		float tempLine2Max = getMaxNumFromArr(secondPoints);
-		float tempLine3Max = getMaxNumFromArr(thirdPoints);
-
-		// 刻度的最大值。
-		float maxNum = getMaxNumOfThree(tempLine1Max, tempLine2Max,
-				tempLine3Max);// 先算出最大值。
-		float finalMaxNum = getRelativeNum(maxNum);// 根据最大值找出临近的最大值--方便Y刻度标注。
-		for (int i = 0; i <= 5; i++) {// 循环对Y刻度赋值。便于显示。
-			if (maxNum >= 0 && maxNum < 1) {
-				SPPED_SCALES1[i] = String
-						.valueOf((int) ((float) finalMaxNum / 5 * i)) + "%";// 百分数的Y轴刻度。
-			} else {
-				SPPED_SCALES1[i] = String
-						.valueOf(0 + (int) ((float) finalMaxNum / 5 * i));
-			}
-		}
-
-		// 基准点。
-		float gridX = 30 + 10;
-		float gridY = getHeight() - 30;
-		// XY间隔。
-		float xSpace = (float) ((getWidth() - 60) / 31 - 1.5);
-		float ySpace = (getHeight() - 160) / (SPPED_SCALES1.length - 1) + 3;
-		// 画Y轴(带箭头)。
-		canvas.drawLine(gridX, gridY - 20 - 10, gridX, 30 + 20, linePaint);
-		canvas.drawLine(gridX, 30 + 20, gridX - 6, 30 + 14 + 20, linePaint);// Y轴箭头。
-		canvas.drawLine(gridX, 30 + 20, gridX + 6, 30 + 14 + 20, linePaint);
-		// 画Y轴名字。
-		canvas.drawText("客流数", gridX, 50 - 5, yChartPaint);
-		// TODO 【最上方】一栏。"1132"
-		// canvas.drawText("合计:", gridX+300, 50-5, yChartPaint);
-		// canvas.drawText(totalChartNum, gridX+300+50+5+3, 50-5, yChartPaint);
-		// 第一个对比环-yellow-green(1)
-		// circleRedBlueGreenPaint.setColor(Color.rgb(169, 222, 63));//绿色(底环)。
-		// canvas.drawCircle(gridX+300+180, 30+20-10, 8,
-		// circleRedBlueGreenPaint);
-		// circleRedBlueGreenPaint.setColor(Color.rgb(255, 210, 0));//黄色(上环)。
-		// canvas.drawCircle(gridX+300+180-8, 30+20-10, 8,
-		// circleRedBlueGreenPaint);
-		// red-green-右侧百分比(1)"0.19%"
-		// canvas.drawText(tongbiRatio, gridX+300+180-8+50+5, 50-5,
-		// yChartPaint);
-		// yChartPaint.setColor(Color.rgb(169, 222, 63));//将头颜色--底色--绿
-		// if(leftDirectionId > 0) {
-		// canvas.drawText("↑", gridX+300+180-8+85+10, 50-5, yChartPaint);
-		// } else {
-		// canvas.drawText("↓", gridX+300+180-8+85+10, 50-5, yChartPaint);
-		// }
-
-		// 第二个对比环-red-blue(2)
-		// circleRedBlueGreenPaint.setColor(Color.rgb(108, 212, 255));//蓝色(底环)。
-		// canvas.drawCircle(gridX+300+180+50+50+50+50-10, 30+20-10, 8,
-		// circleRedBlueGreenPaint);
-		// circleRedBlueGreenPaint.setColor(Color.rgb(255, 210, 0));//黄色(上环)。
-		// canvas.drawCircle(gridX+300+180+50+50+50+50-10-8, 30+20-10, 8,
-		// circleRedBlueGreenPaint);
-		// //red-blue-右侧百分比(2)"3.92%"
-		// yChartPaint.setColor(Color.parseColor("#ffffffff"));//字体白色。
-		// canvas.drawText(huanbiRatio, gridX+300+180+50+50+50+50-10-8+50+5,
-		// 50-5, yChartPaint);
-		// yChartPaint.setColor(Color.rgb(108, 212, 255));//箭头颜色--底色--蓝色。
-		// if(rightDirectionId > 0) {
-		// canvas.drawText("↑", gridX+300+180+50+50+50+50-10-8+85+10, 50-5,
-		// yChartPaint);
-		// } else {
-		// canvas.drawText("↓", gridX+300+180+50+50+50+50-10-8+85+10, 50-5,
-		// yChartPaint);
-		// }
-
-		float y = 0;// Y间隔。
-		// 画X轴+背景虚线。
-		y = gridY - 20;
-		canvas.drawLine(gridX, y - 10, getWidth() - 55 + 10, y - 10, linePaint);// X轴.
-		canvas.drawLine(getWidth() - 55 + 10, y - 10,
-				getWidth() - 55 - 14 + 10, y - 6 - 10, linePaint);// X轴箭头。
-		canvas.drawLine(getWidth() - 55 + 10, y - 10,
-				getWidth() - 55 - 14 + 10, y + 6 - 10, linePaint);
-		for (int n = 0; n < SPPED_SCALES1.length; n++) {
-			y = gridY - 20 - n * ySpace;
-			linePaint.setPathEffect(effect);// 设法虚线间隔样式。
-			// 画除X轴之外的------背景虚线-------
-			if (n > 0) {
-				path.moveTo(gridX, y - 10);// 背景【虚线起点】。
-				path.lineTo(getWidth() - 55 + 10, y - 10);// 背景【虚线终点】。
-				canvas.drawPath(path, linePaint);
-			}
-			// 画Y轴刻度。
-			canvas.drawText(SPPED_SCALES1[n], gridX - 6 - 7, y, textPaint);
-		}
-		// 绘制X刻度坐标。
-		float x = 0;
-		if (dates1[0] != null) {
-			for (int n = 0; n < dates1.length; n++) {
-				// 取X刻度坐标.
-				x = gridX + (n + 1) * xSpace;// 在原点(0,0)处不画刻度,向右移动一个跨度。
-				// 画X轴具体刻度值。
-				if (dates1[n] != null) {
-					canvas.drawLine(x, gridY - 30, x, gridY - 18, linePaint);// 短X刻度。
-					canvas.drawText(dates1[n], x, gridY + 5, textPaint);// X具体刻度值。
-				}
-			}
-		}
-
-		// 起始点。
-		float lastPointX = 0;
-		float lastPointY = 0;
-		float currentPointX = 0;
-		float currentPointY = 0;
-		if (firstPoints != null) {
-			// 1.绘制第一条折线。
-			for (int n = 0; n < dates1.length; n++) {
-				// get current point
-				currentPointX = n * xSpace + xSpace + xSpace + 2;
-				// currentPointY = (float)(getHeight()-ySpace*3/4) -
-				// (float)firstPoints[n] / 60 * (this.getHeight() -
-				// ySpace)-(float)2.5;
-				// currentPointY = (1 - (float)firstPoints[n]/80) * (gridY-40);
-				currentPointY = (float) (getHeight() - 40) - 15 - 5
-						- (float) firstPoints[n] / ((float) 1.6 * maxNum)
-						* (getHeight() - 40);
-				// draw line
-				if (n > 0) {
-					canvas.drawLine(lastPointX, lastPointY, currentPointX,
-							currentPointY, chartLinePaint);// 第一条线[蓝色]
-				}
-				lastPointX = currentPointX;
-				lastPointY = currentPointY;
-			}
-			for (int n = 0; n < dates1.length; n++) {
-				// get current point
-				currentPointX = n * xSpace + xSpace + xSpace + 2;
-				// currentPointY = (float)(getHeight()-ySpace*3/4) -
-				// (float)firstPoints[n] / 60 * (this.getHeight() -
-				// ySpace)-(float)2.5;
-				// currentPointY = (1 - (float)firstPoints[n]/80) * (gridY-30);
-				currentPointY = (float) (getHeight() - 40) - 15 - 5
-						- (float) firstPoints[n] / ((float) 1.6 * maxNum)
-						* (getHeight() - 40);
-				// draw line
-				circelPaint.setColor(Color.rgb(255, 210, 0));// (1)黄色
-				canvas.drawCircle(lastPointX, lastPointY, 8, circelPaint);
-				canvas.drawCircle(lastPointX, lastPointY, 5, innerCircelPaint);
-				lastPointX = currentPointX;
-				lastPointY = currentPointY;
-			}
-		}
-
-		// 重置起始点。
-		lastPointX = 0;// gridX+10;
-		lastPointY = 0;// gridY-90;
-		currentPointX = 0;
-		currentPointY = 0;
-
-		if (secondPoints != null) {
-			// 2.绘制第二条折线。
-			for (int n = 0; n < dates1.length; n++) {
-				// get current point
-				currentPointX = n * xSpace + xSpace + xSpace + 2;
-				// currentPointY = (float)(getHeight()-ySpace*3/4) -
-				// (float)secondPoints[n] / 60 * (this.getHeight() -
-				// ySpace)-(float)2.5;
-				currentPointY = (float) (getHeight() - 40) - 15 - 5
-						- (float) secondPoints[n] / ((float) 1.6 * maxNum)
-						* (getHeight() - 40);
-				// draw line
-				if (n > 0) {
-					canvas.drawLine(lastPointX, lastPointY, currentPointX,
-							currentPointY, secondChartPaint);// 第二条线[绿色]
-				}
-				lastPointX = currentPointX;
-				lastPointY = currentPointY;
-			}
-			for (int n = 0; n < dates1.length; n++) {
-				// get current point
-				currentPointX = n * xSpace + xSpace + xSpace + 2;
-				// currentPointY = (float)(getHeight()-ySpace*3/4) -
-				// (float)secondPoints[n] / 60 * (this.getHeight() -
-				// ySpace)-(float)2.5;
-				currentPointY = (float) (getHeight() - 40) - 15 - 5
-						- (float) secondPoints[n] / ((float) 1.6 * maxNum)
-						* (getHeight() - 40);
-				// draw line
-				circelPaint.setColor(Color.rgb(169, 222, 63));// (2)绿色
-				canvas.drawCircle(lastPointX, lastPointY, 8, circelPaint);
-				canvas.drawCircle(lastPointX, lastPointY, 5, innerCircelPaint);
-				lastPointX = currentPointX;
-				lastPointY = currentPointY;
-			}
-		}
-
-		// 重置起始点。
-		lastPointX = 0;// gridX+10;
-		lastPointY = 0;// gridY-240;
-		currentPointX = 0;
-		currentPointY = 0;
-
-		if (thirdPoints != null) {
-			// 3.绘制第三条折线。
-			for (int n = 0; n < dates1.length; n++) {
-				// get current point
-				currentPointX = n * xSpace + xSpace + xSpace + 2;
-				// currentPointY = (float)(getHeight()-ySpace*3/4) -
-				// (float)thirdPoints[n] / 60 * (this.getHeight() -
-				// ySpace)+(float)4.0;
-				currentPointY = (float) (getHeight() - 40) - 15 - 5
-						- (float) thirdPoints[n] / ((float) 1.6 * maxNum)
-						* (getHeight() - 40);
-				// draw line
-				if (n > 0) {
-					canvas.drawCircle(lastPointX, lastPointY, 5,
-							thirdChartPaint);
-					canvas.drawLine(lastPointX, lastPointY, currentPointX,
-							currentPointY, thirdChartPaint);// 第三条线[橙色]
-				}
-				lastPointX = currentPointX;
-				lastPointY = currentPointY;
-			}
-			for (int n = 0; n < dates1.length; n++) {
-				// get current point
-				currentPointX = n * xSpace + xSpace + xSpace + 2;
-				// currentPointY = (float)(getHeight()-ySpace*3/4) -
-				// (float)thirdPoints[n] / 60 * (this.getHeight() -
-				// ySpace)+(float)4.0;
-				currentPointY = (float) (getHeight() - 40) - 15 - 5
-						- (float) thirdPoints[n] / ((float) 1.6 * maxNum)
-						* (getHeight() - 40);
-				// draw line
-				circelPaint.setColor(Color.rgb(108, 212, 255));// (3)蓝色
-				canvas.drawCircle(lastPointX, lastPointY, 8, circelPaint);
-				canvas.drawCircle(lastPointX, lastPointY, 5, innerCircelPaint);
-				lastPointX = currentPointX;
-				lastPointY = currentPointY;
-			}
-		}
-
-		// 中间竖直线--
-		canvas.drawLine(s, gridY - 40, s, gridY - 5 * ySpace - 40,
-				centerLinePaint);
-		canvas.drawLine(s - 10, gridY - 40, s + 10, gridY - 40, centerLinePaint);
-		canvas.drawLine(s - 10, gridY - 5 * ySpace - 40, s + 10, gridY - 5
-				* ySpace - 40, centerLinePaint);
+		circleRGBPaint.setStrokeWidth(6);
+		circleRGBPaint.setAntiAlias(true);// 消除锯齿。
+		circleRGBPaint.setStyle(Style.STROKE);
+		circleRGBPaint.setColor(Color.parseColor("#4692B1"));//
 	}
 
-	int clickCount = 0;
-	long firstClickTime = 0;
-	long secondClickTime = 0;
-
 	/**
-	 * 手势监听--处理双击事件。
+	 * 手势监听
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
-			// if(MainLSPKPIActivity.isForbidClick)
-			// {//当4个titleBtn被按下,禁止对折线图的一切操作。
-			// clickCount++;
-			// if(clickCount == 1) {
-			// firstClickTime = System.currentTimeMillis();
-			// MainLSPKPIActivity.doubleClick = false;
-			// } else if(clickCount == 2) {
-			// secondClickTime = System.currentTimeMillis();
-			// if(secondClickTime - firstClickTime < 1000) {
-			// MainLSPKPIActivity.doubleClick = true;
-			// clickCount = 0;
-			// firstClickTime = 0;
-			// secondClickTime = 0;
-			// } else {
-			// // MainLSPKPIActivity.doubleClick = false;
-			// clickCount = 0;
-			// firstClickTime = 0;
-			// secondClickTime = 0;
-			// }
-			// }
-			// Log.i("action-down", " action-down");
-			// }
 			if (event.getX() >= (s - 30) && event.getX() <= (s + 30)) {
 				isTouched = true;
 			}
@@ -465,113 +223,107 @@ public class StatusValueCheckView extends View {
 			// }
 			break;
 		}
-		// if(!MainLSPKPIActivity.doubleClick)
-		// return true;//没双击时-子控件有焦点。
-		// else
-		// return false;//将焦点传递给父控件。
 		return true;
 	}
 
-	/**
-	 * 取数组中的最大元素
-	 * 
-	 * @param numArr
-	 *            取值的数组
-	 * @return 返回数组中的最大值。
-	 */
-	private float getMaxNumFromArr(float[] numArr) {
-		float maxNum = numArr[0];
-		for (int i = 0; i < numArr.length; i++) {
-			if (numArr[i] > maxNum) {
-				maxNum = numArr[i];
-			}
-		}
-		return maxNum;
+	public StatusValueCheckView(Context context) {
+		// TODO Auto-generated constructor stub
+		super(context);
+		screenW = this.getWidth();
+		screenH = this.getHeight();
 	}
 
-	/**
-	 * 返回3个值中的最大值。
-	 * 
-	 * @param firstNum
-	 *            第一个数值
-	 * @param secondNum
-	 *            第二个数值
-	 * @param thirdNum
-	 *            第三个数值
-	 * @return 返回传入的3个值中的最大值。
-	 */
-	private float getMaxNumOfThree(float firstNum, float secondNum,
-			float thirdNum) {
-		float maxNum = 0;
-		if (firstNum >= secondNum && firstNum >= thirdNum) {
-			maxNum = firstNum;
-		}
-		if (secondNum >= firstNum && secondNum >= thirdNum) {
-			maxNum = secondNum;
-		}
-		if (thirdNum >= firstNum && thirdNum >= secondNum) {
-			maxNum = thirdNum;
-		}
-		return maxNum;
+	public StatusValueCheckView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		screenW = this.getWidth();
+		screenH = this.getHeight();
 	}
 
-	/**
-	 * 根据数组最大值来获取临近最大值--来作为刻度的最大值----方便分配刻度。
-	 * 
-	 * @param num
-	 *            传入的值
-	 * @return 返回num附近的整数值, 方便刻度分配。
-	 */
-	private float getRelativeNum(float num) {
-		float desNum = 0;
-		if (num >= 0 && num < 1) {
-			desNum = 100;
-		} else if (num >= 1 && num <= 100) {
-			desNum = 100;
-		} else if (num > 100 && num < 1000) {
-			int num1 = (int) num % 100;// 余数-个十位。
-			int num2 = (int) num / 100;// 高位-百位。
-			if (num1 > 0 && num1 <= 50) {
-				desNum = num2 * 100 + 50;// 取临近的整数值作为Y轴刻度。
-			} else if (num1 > 50 && num1 < 100) {
-				desNum = num2 * 100 + 100;
-			}
-		} else if (num >= 1000 && num < 1500) {
-			desNum = handleY(num, desNum, 1000);
-		} else if (num >= 1500 && num < 2000) {
-			desNum = handleY(num, desNum, 1000);
-		} else if (num >= 2000 && num < 3000) {
-			desNum = handleY(num, desNum, 1000);
-		} else if (num >= 3000 && num < 4000) {
-			desNum = handleY(num, desNum, 1000);
-		} else if (num >= 4000 && num < 5000) {
-			desNum = handleY(num, desNum, 1000);
-		} else if (num >= 5000 && num < 10000) {
-			desNum = handleY(num, desNum, 1000);
-		}
-		return desNum;
+	public StatusValueCheckView(Context context, AttributeSet attrs,
+			int defStyle) {
+		super(context, attrs, defStyle);
+		screenW = this.getWidth();
+		screenH = this.getHeight();
 	}
 
-	/**
-	 * 具体处理Y轴刻度
-	 * 
-	 * @param sourceNum
-	 *            传入的实际值
-	 * @param desNum
-	 *            要返回的目标值
-	 * @param highPostionNum
-	 *            实际值的最高位
-	 * @return 将传入的目标值赋值后返回
-	 */
-	private float handleY(float sourceNum, float desNum, int highPostionNum) {
-		int num1 = (int) sourceNum % highPostionNum;// 余数-个十位。
-		int num2 = (int) sourceNum / highPostionNum;// 高位-百位。
-		if (num1 > 0 && num1 <= highPostionNum / 2) {
-			desNum = num2 * highPostionNum + highPostionNum / 2;// 取临近的整数值作为Y轴刻度。
-		} else if (num1 > highPostionNum / 2 && num1 < highPostionNum) {
-			desNum = num2 * highPostionNum + highPostionNum;
-		}
-		return desNum;
+	public int getXOrigin() {
+		return XOrigin;
+	}
+
+	public void setXOrigin(int xOrigin) {
+		XOrigin = xOrigin;
+	}
+
+	public int getYOrigin() {
+		return YOrigin;
+	}
+
+	public void setYOrigin(int yOrigin) {
+		YOrigin = yOrigin;
+	}
+
+	public int getXLength() {
+		return XLength;
+	}
+
+	public void setXLength(int xLength) {
+		XLength = xLength;
+	}
+
+	public int getYLength() {
+		return YLength;
+	}
+
+	public void setYLength(int yLength) {
+		YLength = yLength;
+	}
+
+	public String[] getXLabel() {
+		return XLabel;
+	}
+
+	public void setXLabel(String[] xLabel) {
+		XLabel = xLabel;
+	}
+
+	public String[] getYLabel() {
+		return YLabel;
+	}
+
+	public void setYLabel(String[] yLabel) {
+		YLabel = yLabel;
+	}
+
+	public float[] getData() {
+		return Data;
+	}
+
+	public void setData(float[] data) {
+		Data = data;
+	}
+
+	public String getTitle() {
+		return Title;
+	}
+
+	public void setTitle(String title) {
+		Title = title;
+	}
+
+	public String getxTitle() {
+		return xTitle;
+	}
+
+	public void setxTitle(String xTitle) {
+		this.xTitle = xTitle;
+	}
+
+	public String getyTitle() {
+		return yTitle;
+	}
+
+	public void setyTitle(String yTitle) {
+		this.yTitle = yTitle;
 	}
 
 }
