@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Testgateway</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">hello</string>
+    <string name="serialPort_check">串口连接状况</string>
+    <string name="serialPortSetting">串口设置</string>
+    <string name="sinkSetting">节点设置</string>
+    <string name="linkSetting">连接设置</string>
+    <string name="eternetSetting">以太网设置</string>
+    <string name="wifiSetting">wifi设置</string>
+    <string name="statusValueCheck">状态查看</string>
+    <string name="temperature">温度</string>
+    <string name="humidity">湿度</string>
+    <string name="light">光照</string>
+    <string name="co2">co2</string>
+    <string name="powerSetting">预警电量:</string>
+    <string name="alertSettingTitle">预警设置</string>
+    <string name="alertSettingItemTitle1">电量设置</string>
+    <string name="musicSetting">预警音乐设置:</string>
+    <string name="music">语音文件：</string>
+    <string name="musicSelect">选择文件</string>
+    <string name="isAlertMusic">语音提醒:</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="refresh">刷新</string>
+    <string name="settingOK">确定</string>
+    <string name="sinkCheck">节点信息</string>
+    <string name="listNodeImage">节点图片</string>
+    <string name="nodeId">节点ID</string>
+    <string name="nodePower">节点电量</string>
+    <string name="noData">没有数据</string>
+    <string name="packageType">包类型</string>
+    <string name="packageStatus">包状态</string>
+    <string name="packageMessage">包内容</string>
+    <string name="packageReceivetime">接收时间</string>
+  <!--   <string name="internetSetting">以太网设置</string>
+    <string name="wifiSetting">wifi设置</string> -->
+    <string name="dataCenter">数据中心</string>
+    <string name="showAll">显示全部</string>
+    <string name="searchTitle">搜索</string>
+    <string name="searchRecent">搜索最近</string>
+    <string name="searchRecentUnit">条</string>
+    <string name="message">message</string>
+    <string name="Ctype">Ctype</string>
+    <string name="NodeID">NodeID</string>
+    <string name="status">status</string>
+    <string name="receivetime">receivetime</string>
+    <string name="aboutUs">公司介绍</string>
+    <string name="quit">退出</string>
+    <string name="sendCycleTitle">节点发包周期</string>
+    <string name="sendCycleItem">周期:</string>
+
+    <string-array name="dev_path">
+        <item>/dev/ttySAC0</item>
+        <item>/dev/ttySAC1</item>
+        <item>/dev/ttySAC2</item>
+        <item>/dev/ttySAC3</item>
+        <item>/dev/ttyUSB0</item>
+        <item>/dev/ttyUSB1</item>
+        <item>/dev/ttyUSB2</item>
+    </string-array>
+    <string-array name="nodeSettingCycle">
+        <item>5秒</item>
+        <item>10秒</item>
+        <item>30秒</item>
+        <item>1分钟</item>
+        <item>2分钟</item>
+        <item>5分钟</item>
+        <item>10分钟</item>
+    </string-array>
+    <string-array name="powerSetting">
+        <item>5%</item>
+        <item>10%</item>
+        <item>15%</item>
+        <item>20%</item>
+        <item>25%</item>
+        <item>30%</item>
+        <item>35%</item>
+        <item>40%</item>
+    </string-array>
+
+    <string name="title_activity_fragment_node_setting">Fragment_nodeSetting</string>
+    <string name="title_activity_file_chooser">FileChooserActivity</string>
+</resources>

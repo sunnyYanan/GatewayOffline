@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--
+         <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    -->
+    <!-- check if the serialPort is connecting -->
+    <item
+        android:id="@+id/serialPort_check"
+        android:showAsAction="ifRoom"
+        android:textSize="15sp"
+        android:title="@string/serialPort_check"/>
+    <!-- check if the server is connecting -->
+    <!-- <item
+        android:id="@+id/server_check"
+        android:showAsAction="ifRoom"
+        android:title="@string/server_check"/> -->
+    <!-- quit -->
+    <item
+        android:id="@+id/quit"
+        android:showAsAction="ifRoom"
+        android:textSize="15sp"
+        android:title="@string/quit"/>
+
+</menu>

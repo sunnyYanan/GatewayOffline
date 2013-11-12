@@ -1,0 +1,114 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:context=".MainActivity" >
+
+    <!-- android:background="@drawable/back" -->
+
+    <LinearLayout
+        android:id="@+id/functionView"
+        android:layout_width="135dp"
+        android:layout_height="fill_parent"
+        android:background="#60000000"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/serialPortSetting"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/serialPortSetting" />
+        <!-- android:textSize="15sp" -->
+
+        <!-- <Button
+            android:id="@+id/serverSetting"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/serverSetting" /> -->
+
+        <Button
+            android:id="@+id/sinkSetting"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/sinkSetting" />
+        <Button
+            android:id="@+id/linkSetting"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+             android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/linkSetting" />
+
+        <Button
+            android:id="@+id/sinkCheck"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/sinkCheck" />
+        <Button
+            android:id="@+id/statusValueCheck"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/statusValueCheck" />
+
+       <!--  <Button
+            android:id="@+id/internetSetting"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/internetSetting" />
+
+        <Button
+            android:id="@+id/wifiSetting"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/wifiSetting" /> -->
+
+        <Button
+            android:id="@+id/dataCenter"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/dataCenter" />
+
+        <Button
+            android:id="@+id/aboutUs"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/aboutUs" />
+
+        <Button
+            android:id="@+id/quit"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/quit" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dip"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+    </FrameLayout>
+
+</LinearLayout>

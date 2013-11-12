@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".Fragment_nodeSetting" >
+
+    <LinearLayout
+        android:id="@+id/dataCenterShowSetting"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/showAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/showAll" />
+
+        <Button
+            android:id="@+id/searchTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="@string/searchTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/searchRecent"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/searchRecentNum"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/searchRecentUnit"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dataCenterShow"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dataCenterShowSetting"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/DBmessage"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:text="@string/message" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/DBCtype"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Ctype" />
+
+        <TextView
+            android:id="@+id/DBNodeID"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/NodeID" />
+
+        <!-- <TextView
+            android:id="@+id/DBstatus"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/status" /> -->
+
+        <TextView
+            android:id="@+id/DBreceivetime"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/receivetime" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dataCenterShow" >
+    </ListView>
+
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dataCenterShow"
+        android:text="@string/noData" />
+
+</RelativeLayout>
