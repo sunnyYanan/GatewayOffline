@@ -21,7 +21,7 @@ public class FileInfo {
 		if (fileName.lastIndexOf(".") < 0) // Don't have the suffix
 			return false;
 		String fileSuffix = fileName.substring(fileName.lastIndexOf("."));
-		if (!isDirectory() && FileChooserAdapter.PPT_SUFFIX.contains(fileSuffix))
+		if (!isDirectory() && FileChooserAdapter.MP3_SUFFIX.contains(fileSuffix))
 			return true;
 		else
 			return false;

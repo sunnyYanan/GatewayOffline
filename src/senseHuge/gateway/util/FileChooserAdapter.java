@@ -20,10 +20,10 @@ public class FileChooserAdapter extends BaseAdapter {
 	private ArrayList<FileInfo> mFileLists;
 	private LayoutInflater mLayoutInflater = null;
 
-	public static ArrayList<String> PPT_SUFFIX = new ArrayList<String>();
+	public static ArrayList<String> MP3_SUFFIX = new ArrayList<String>();
 
 	static {
-		PPT_SUFFIX.add(".mp3");
+		MP3_SUFFIX.add(".mp3");
 //		PPT_SUFFIX.add(".pptx");
 	}
 

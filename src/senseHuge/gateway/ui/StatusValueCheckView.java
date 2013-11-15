@@ -50,8 +50,8 @@ public class StatusValueCheckView extends View {
 	private Paint xTitlePaint = new Paint();// x轴标题。
 	private Paint titlePaint = new Paint();// 标题。
 	private Paint circleRGBPaint = new Paint();// 环形画笔。
-	private Paint circelPaint = new Paint();// 拐点圆圈。
-	private Paint innerCircelPaint = new Paint();// 内圆。
+	// private Paint circelPaint = new Paint();// 拐点圆圈。
+	// private Paint innerCircelPaint = new Paint();// 内圆。
 	private Paint linePaint = new Paint();// 第一条线
 	private Paint centerLinePaint = new Paint();// 中间竖线。
 
@@ -104,11 +104,15 @@ public class StatusValueCheckView extends View {
 					canvas.drawLine(XOrigin + (i - 1) * xScale,
 							YCoord(Data[i - 1]), XOrigin + i * xScale,
 							YCoord(Data[i]), linePaint);
-				canvas.drawCircle(XOrigin + i * xScale, YCoord(Data[i]), 2,
-						backLinePaint);
-				canvas.drawText(String.valueOf(Data[i]), XOrigin + i * xScale, YCoord(Data[i])-10, textPaint);
+				canvas.drawText(String.valueOf(Data[i]), XOrigin + i * xScale,
+						YCoord(Data[i]) - 10, textPaint);
 			} catch (Exception e) {
 			}
+		}
+		// 画折点
+		for (int i = 0; i < this.XLabel.length; i++) {
+			canvas.drawCircle(XOrigin + i * xScale, YCoord(Data[i]), 2,
+					circleRGBPaint);
 		}
 		canvas.drawLine(XOrigin + XLength, YOrigin, XOrigin + XLength - 6,
 				YOrigin - 3, backLinePaint); // 箭头
@@ -171,14 +175,14 @@ public class StatusValueCheckView extends View {
 		titlePaint.setAntiAlias(true);
 		titlePaint.setTextAlign(Align.CENTER);
 		titlePaint.setTextSize(18);
-		circelPaint.setStyle(Style.FILL);
-		circelPaint.setStrokeWidth(2);
-		circelPaint.setColor(Color.YELLOW);
-		circelPaint.setAntiAlias(true);
-		innerCircelPaint.setStyle(Style.FILL);
-		innerCircelPaint.setStrokeWidth(1);
-		innerCircelPaint.setColor(Color.parseColor("#464646"));
-		innerCircelPaint.setAntiAlias(true);
+		// circelPaint.setStyle(Style.FILL);
+		// circelPaint.setStrokeWidth(2);
+		// circelPaint.setColor(Color.YELLOW);
+		// circelPaint.setAntiAlias(true);
+		// innerCircelPaint.setStyle(Style.FILL);
+		// innerCircelPaint.setStrokeWidth(1);
+		// innerCircelPaint.setColor(Color.parseColor("#464646"));
+		// innerCircelPaint.setAntiAlias(true);
 		linePaint.setStyle(Style.FILL);
 		linePaint.setStrokeWidth(3);
 		linePaint.setColor(Color.rgb(255, 210, 0));// (1)黄色

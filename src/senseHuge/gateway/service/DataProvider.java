@@ -60,7 +60,7 @@ public class DataProvider extends ContentProvider {
 			Uri noteUri = ContentUris.withAppendedId(CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(noteUri, null);
 			//Ë¢ÐÂlistnodeÒ³Ãæ
-			nodePrepare.prepare();
+//			nodePrepare.prepare();
 			return noteUri;
 		}
 		return null;

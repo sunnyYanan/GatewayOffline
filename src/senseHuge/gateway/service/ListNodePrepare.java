@@ -50,7 +50,6 @@ public class ListNodePrepare {
 			addNodeIntoList(Fragment_listNode.nodeId.get(i));
 		}
 		cursor.close();
-		db.close();
 	}
 
 	// 将节点加入到显示列表中
@@ -133,9 +132,8 @@ public class ListNodePrepare {
 		// (这里的100就是2位小数点,如果要其它位,如4位,这里两个100改成10000)
 		System.out.println("average power：" + b);
 
-		// 还应有用户设置的控制
 		String trige = findIftriger();
-		if (b != 0 && trige.equals("1")) {
+		if (trige!=null && b != 0 && trige.equals("1")) {
 			TrigerTheAlert(b);
 		}
 		return b;

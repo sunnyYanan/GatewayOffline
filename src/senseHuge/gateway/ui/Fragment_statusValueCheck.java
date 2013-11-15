@@ -62,7 +62,7 @@ public class Fragment_statusValueCheck extends Fragment {
 				statusView.setData(new String[] { "11", "12", "13", "14", "15",
 						"16", "17" }, // X轴刻度
 						new String[] { "0", "50", "100", "150", "200", "250" ,"300"}, // Y轴刻度
-						new float[] { 15, 23, 10, 36, 45, 40, 12 });// 数据);
+						new float[] { 50, 23, 10, 36, 45, 40, 12 });// 数据);
 				statusView.invalidate();
 				break;
 			case R.id.co2:

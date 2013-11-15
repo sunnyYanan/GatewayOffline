@@ -39,7 +39,7 @@ public class Fragment_listNode extends Fragment {
 	ListView packageList;
 	View dialog;
 	TextView packageAfterParse;
-//	Button refreshButton;
+	// Button refreshButton;
 	// dialog显示出来的当前节点的所有包的内容
 	List<Map<String, String>> content;
 	GridView gridview;
@@ -70,18 +70,17 @@ public class Fragment_listNode extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_list_node, container,
 				false);
 		gridview = (GridView) view.findViewById(R.id.gridview);
-	/*	refreshButton = (Button) view.findViewById(R.id.refresh);
-		refreshButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				adapter.notifyDataSetChanged();
-			}
-
-		});*/
+		/*
+		 * refreshButton = (Button) view.findViewById(R.id.refresh);
+		 * refreshButton.setOnClickListener(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View arg0) { // TODO Auto-generated
+		 * method stub adapter.notifyDataSetChanged(); }
+		 * 
+		 * });
+		 */
 		show();
-		//实时刷新
+		// 实时刷新
 		if (MainActivity.serialPortConnect)
 			new Thread(new MyThread()).start();
 		return view;
@@ -170,14 +169,14 @@ public class Fragment_listNode extends Fragment {
 				data = new HashMap<String, String>();
 				String message = cursor.getString(cursor
 						.getColumnIndex("message"));
-//				String status = cursor.getString(cursor
-//						.getColumnIndex("status"));
+				// String status = cursor.getString(cursor
+				// .getColumnIndex("status"));
 				String type = cursor.getString(cursor.getColumnIndex("Ctype"));
 				String receicvetime = cursor.getString(cursor
 						.getColumnIndex("receivetime"));
 
 				data.put("type", type);
-//				data.put("status", status);
+				// data.put("status", status);
 				data.put("message", message);
 				data.put("receivetime", receicvetime);
 				content.add(data);
@@ -191,9 +190,9 @@ public class Fragment_listNode extends Fragment {
 			packageList = (ListView) dialog.findViewById(android.R.id.list);
 			SimpleAdapter adapter = new SimpleAdapter(dialog.getContext(),
 					content, R.layout.list_node_package, new String[] { "type",
-							 "message", "receivetime" }, new int[] {
-							R.id.packageType,
-							R.id.packageMessage, R.id.packageReceivetime });
+							"message", "receivetime" }, new int[] {
+							R.id.packageType, R.id.packageMessage,
+							R.id.packageReceivetime });
 			packageList.setAdapter(adapter);
 
 			// 设置列表点击事件
