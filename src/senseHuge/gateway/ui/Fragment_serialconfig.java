@@ -10,6 +10,7 @@ import com.example.testgateway.R;
 import senseHuge.gateway.model.Serial;
 import senseHuge.gateway.service.SerialportDataProcess;
 import senseHuge.gateway.util.SerialUtil;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.os.Bundle;
@@ -141,6 +142,7 @@ public class Fragment_serialconfig extends Fragment {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	class ButtonClickListener implements OnClickListener {
 		FragmentTransaction transaction;
 
@@ -175,6 +177,7 @@ public class Fragment_serialconfig extends Fragment {
 
 					MainActivity.serialPortConnect = true;
 					serial.setState(true);
+					ma.invalidateOptionsMenu();
 
 					// 串口读取数据
 					readThread = new ReadThread();
@@ -207,7 +210,7 @@ public class Fragment_serialconfig extends Fragment {
 
 						// Log.i(tag, ma.havadata.getState().toString());
 						MainActivity.serialPortConnect = false;
-
+						ma.invalidateOptionsMenu();
 						dataProcess.interrupt();
 						ma.serialState.setValue(false);// 应该改进为用这个！！
 
@@ -218,6 +221,7 @@ public class Fragment_serialconfig extends Fragment {
 						changeButtonStatus();
 						// readThread.stop();
 						linkStatus("关闭串口成功");
+						
 
 					} catch (SecurityException e1) {
 						// TODO Auto-generated catch block
