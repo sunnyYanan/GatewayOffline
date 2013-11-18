@@ -46,12 +46,12 @@ public class MainActivity extends FragmentActivity {
 
 	public static MySQLiteDbHelper mDbhelper;
 	// SerialUtil serialUtil = new SerialUtil();
-//	public static HttpClientUtil httpClientUtil;
+	// public static HttpClientUtil httpClientUtil;
 	PackagePattern packagePattern = null;
 	public static XmlTelosbPackagePatternUtil xmlTelosbPackagePatternUtil;
 	ListNodePrepare listNodePrepare;
 
-//	public static boolean serverConnect = false;// 服务器是否连接
+	// public static boolean serverConnect = false;// 服务器是否连接
 	public static boolean serialPortConnect = false;// 串口是否连接
 
 	// public RingBuffer<String> ringBuffer = new RingBuffer<String>(capibity);
@@ -64,17 +64,19 @@ public class MainActivity extends FragmentActivity {
 
 	FragmentManager manager;
 	LinearLayout layout;
-	Fragment f_serialPort, f_listnode, f_nodeSetting, f_dataCenter,
-			f_aboutUs, f_linkSetting,f_statusValueCheck;
+	Fragment f_serialPort, f_listnode, f_nodeSetting, f_dataCenter, f_aboutUs,
+			f_linkSetting, f_statusValueCheck, f_topoStructure;
 	Button serialPortSetting;
-//	Button serverSetting;
+	// Button serverSetting;
 	Button sinkSetting;
 	Button sinkCheck;
-	/*Button internetSetting;
-	Button wifiSetting;*/
+	/*
+	 * Button internetSetting; Button wifiSetting;
+	 */
 	Button statusValueCheck;
 	Button linkSetting;
 	Button dataCenter;
+	Button topoStructure;
 	Button aboutUs;
 	Button quit;
 
@@ -95,6 +97,7 @@ public class MainActivity extends FragmentActivity {
 		f_aboutUs = new Fragment_aboutUs();
 		f_linkSetting = new Fragment_linkSetting();
 		f_statusValueCheck = new Fragment_statusValueCheck();
+		f_topoStructure = new Fragment_topoStructure();
 
 		// 得到按钮以及设置按钮监听器
 		serialPortSetting = (Button) findViewById(R.id.serialPortSetting);
@@ -105,6 +108,7 @@ public class MainActivity extends FragmentActivity {
 		dataCenter = (Button) findViewById(R.id.dataCenter);
 		aboutUs = (Button) findViewById(R.id.aboutUs);
 		quit = (Button) findViewById(R.id.quit);
+		topoStructure = (Button) findViewById(R.id.topoStructure);
 
 		serialPortSetting.setOnClickListener(new ButtonClickListener());
 		sinkSetting.setOnClickListener(new ButtonClickListener());
@@ -114,6 +118,7 @@ public class MainActivity extends FragmentActivity {
 		dataCenter.setOnClickListener(new ButtonClickListener());
 		aboutUs.setOnClickListener(new ButtonClickListener());
 		quit.setOnClickListener(new ButtonClickListener());
+		topoStructure.setOnClickListener(new ButtonClickListener());
 
 		// 默认启动事务：节点
 		transaction.add(R.id.fragment_container, f_serialPort);
@@ -136,12 +141,12 @@ public class MainActivity extends FragmentActivity {
 				transaction.commit();
 				break;
 			}
-			/*case R.id.serverSetting: {
-				transaction = manager.beginTransaction();
-				transaction.replace(R.id.fragment_container, f_server);
-				transaction.commit();
-				break;
-			}*/
+			/*
+			 * case R.id.serverSetting: { transaction =
+			 * manager.beginTransaction();
+			 * transaction.replace(R.id.fragment_container, f_server);
+			 * transaction.commit(); break; }
+			 */
 			case R.id.sinkSetting:
 				transaction = manager.beginTransaction();
 				transaction.replace(R.id.fragment_container, f_nodeSetting);
@@ -160,11 +165,12 @@ public class MainActivity extends FragmentActivity {
 				transaction.replace(R.id.fragment_container, f_linkSetting);
 				transaction.commit();
 				break;
-				
+
 			}
 			case R.id.statusValueCheck: {
 				transaction = manager.beginTransaction();
-				transaction.replace(R.id.fragment_container, f_statusValueCheck);
+				transaction
+						.replace(R.id.fragment_container, f_statusValueCheck);
 				transaction.commit();
 				break;
 			}
@@ -183,6 +189,11 @@ public class MainActivity extends FragmentActivity {
 				finish();
 				break;
 			}
+			case R.id.topoStructure:
+				transaction = manager.beginTransaction();
+				transaction.replace(R.id.fragment_container, f_topoStructure);
+				transaction.commit();
+				break;
 			default: {
 				transaction.replace(R.id.fragment_container, f_listnode);
 				transaction.commit();
@@ -234,7 +245,7 @@ public class MainActivity extends FragmentActivity {
 				getFilesDir().toString());
 		System.out.println("2");
 		// 客户端，服务器，串口，等资源的初始化
-//		httpClientUtil = new HttpClientUtil(getBaseContext());
+		// httpClientUtil = new HttpClientUtil(getBaseContext());
 		httpserverState = new MySource();
 		serialState = new MySource();
 		// ms = new MySource();
@@ -265,7 +276,7 @@ public class MainActivity extends FragmentActivity {
 			public void run() {
 				// TODO Auto-generated method stub
 				// 要做的事情
-				if(mp.isPlaying()) {
+				if (mp.isPlaying()) {
 					alertNoticeDialog();
 				}
 			}
@@ -273,10 +284,13 @@ public class MainActivity extends FragmentActivity {
 		handler.postDelayed(runnable, 4000);
 		// testBackup();
 	}
+
 	Handler handler = new Handler();
+
 	private void alertNoticeDialog() {
 		// TODO Auto-generated method stub
-		new AlertDialog.Builder(this).setTitle("预警:"+ListNodePrepare.currentId+"节点电量低于阈值")
+		new AlertDialog.Builder(this)
+				.setTitle("预警:" + ListNodePrepare.currentId + "节点电量低于阈值")
 				.setMessage("是否关闭预警")
 				.setPositiveButton("是", new DialogInterface.OnClickListener() {
 					@Override
@@ -284,8 +298,7 @@ public class MainActivity extends FragmentActivity {
 						mp.stop();
 						mp.release();
 					}
-				})
-				.setNegativeButton("否", null).show();
+				}).setNegativeButton("否", null).show();
 	}
 
 	public void testBackup() {

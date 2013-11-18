@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import senseHuge.gateway.model.PackagePattern;
+import senseHuge.gateway.service.ListNodePrepare;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.database.Cursor;
@@ -44,6 +45,7 @@ public class Fragment_listNode extends Fragment {
 	List<Map<String, String>> content;
 	GridView gridview;
 	SQLiteDatabase db;
+	ListNodePrepare nodePrepare;
 
 	// ”“≤‡∞¸ƒ⁄»›œ‘ æ
 	/*
@@ -70,6 +72,7 @@ public class Fragment_listNode extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_list_node, container,
 				false);
 		gridview = (GridView) view.findViewById(R.id.gridview);
+		nodePrepare = new ListNodePrepare();
 		/*
 		 * refreshButton = (Button) view.findViewById(R.id.refresh);
 		 * refreshButton.setOnClickListener(new OnClickListener() {
@@ -92,6 +95,7 @@ public class Fragment_listNode extends Fragment {
 			super.handleMessage(msg);
 			switch (msg.arg1) {
 			case 1:
+				nodePrepare.prepare();
 				adapter.notifyDataSetChanged();
 			}
 

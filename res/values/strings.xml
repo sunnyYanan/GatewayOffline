@@ -47,6 +47,7 @@
     <string name="NodeID">NodeID</string>
     <string name="status">status</string>
     <string name="receivetime">receivetime</string>
+    <string name="topoStructure">拓扑结构</string>
     <string name="aboutUs">公司介绍</string>
     <string name="quit">退出</string>
     <string name="sendCycleTitle">节点发包周期</string>

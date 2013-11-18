@@ -13,7 +13,7 @@ import android.net.Uri;
 public class DataProvider extends ContentProvider {
 	MySQLiteDbHelper dbHelper;
 	SQLiteDatabase db;
-	ListNodePrepare nodePrepare;
+
 	public static final String AUTHORITY = "senseHuge.gateway.service";
 
 	/**
@@ -25,13 +25,14 @@ public class DataProvider extends ContentProvider {
 
 	/** Constants to identify the requested operation */
 	private static final int MESSAGE = 1;
-	//private static final int RECENTTIME = 2;
+	// private static final int RECENTTIME = 2;
 
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		uriMatcher.addURI(AUTHORITY, MySQLiteDbHelper.TABLEMESSAGE, MESSAGE);
-	//	uriMatcher.addURI(AUTHORITY, MySQLiteDbHelper.TABLEMESSAGE+"/time", RECENTTIME);
+		// uriMatcher.addURI(AUTHORITY, MySQLiteDbHelper.TABLEMESSAGE+"/time",
+		// RECENTTIME);
 	}
 
 	@Override
@@ -59,8 +60,8 @@ public class DataProvider extends ContentProvider {
 		if (rowId > 0) {
 			Uri noteUri = ContentUris.withAppendedId(CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(noteUri, null);
-			//刷新listnode页面
-//			nodePrepare.prepare();
+			// 刷新listnode页面
+			// nodePrepare.prepare();
 			return noteUri;
 		}
 		return null;
@@ -70,9 +71,9 @@ public class DataProvider extends ContentProvider {
 	public boolean onCreate() {
 		// TODO Auto-generated method stub
 		dbHelper = new MySQLiteDbHelper(this.getContext());
-		nodePrepare = new ListNodePrepare();
-		return true;
 		
+		return true;
+
 	}
 
 	@Override
@@ -83,14 +84,19 @@ public class DataProvider extends ContentProvider {
 		Cursor c;
 		switch (uriMatcher.match(arg0)) {
 		case MESSAGE:
-			/*c = db.query(MySQLiteDbHelper.TABLEMESSAGE, arg1, arg2, arg3, null,
-					null, null);*/
-			//c = db.rawQuery("select * from "+MySQLiteDbHelper.TABLEMESSAGE,null);
-			 c = db.query(MySQLiteDbHelper.TABLEMESSAGE, arg1, arg2, arg3, null, null, arg4);
+			/*
+			 * c = db.query(MySQLiteDbHelper.TABLEMESSAGE, arg1, arg2, arg3,
+			 * null, null, null);
+			 */
+			// c =
+			// db.rawQuery("select * from "+MySQLiteDbHelper.TABLEMESSAGE,null);
+			c = db.query(MySQLiteDbHelper.TABLEMESSAGE, arg1, arg2, arg3, null,
+					null, arg4);
 			break;
-		/*case RECENTTIME:
-			c = db.query(MySQLiteDbHelper.TABLEMESSAGE, arg1, arg2, arg3, null, null, arg4);
-			break;*/
+		/*
+		 * case RECENTTIME: c = db.query(MySQLiteDbHelper.TABLEMESSAGE, arg1,
+		 * arg2, arg3, null, null, arg4); break;
+		 */
 		default:
 			throw new IllegalArgumentException("Unknown URI" + arg0);
 		}
