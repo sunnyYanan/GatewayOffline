@@ -1,6 +1,7 @@
 package senseHuge.gateway.service;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,6 +46,7 @@ public class ListNodePrepare {
 			}
 		}
 		Fragment_listNode.nodeList.clear();
+		Collections.sort(Fragment_listNode.nodeId);
 		for (int i = 0; i < Fragment_listNode.nodeId.size(); i++) {
 			System.out.println("�ڵ㣺" + Fragment_listNode.nodeId.get(i));
 			addNodeIntoList(Fragment_listNode.nodeId.get(i));
@@ -239,7 +241,7 @@ public class ListNodePrepare {
 				System.out.println("power before:" + power);
 			}
 		}
-		int powerDeci = 0;
+		float powerDeci = 0;
 		for (int i = power.length() - 1; i >= 0; i--) {
 			char n = power.charAt(i);
 			int num = 0;

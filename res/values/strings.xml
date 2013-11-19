@@ -15,6 +15,9 @@
     <string name="humidity">湿度</string>
     <string name="light">光照</string>
     <string name="co2">co2</string>
+    <string name="nodeSelectIns">节点选择：</string>
+    <string name="itemNum">显示最近：</string>
+    <string name="granularity">显示粒度：</string>
     <string name="powerSetting">预警电量:</string>
     <string name="alertSettingTitle">预警设置</string>
     <string name="alertSettingItemTitle1">电量设置</string>
@@ -80,6 +83,18 @@
         <item>30%</item>
         <item>35%</item>
         <item>40%</item>
+    </string-array>
+    <string-array name="granularity">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 
     <string name="title_activity_fragment_node_setting">Fragment_nodeSetting</string>

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import senseHuge.gateway.Dao.MySQLiteDbHelper;
 import senseHuge.gateway.model.PackagePattern;
 import senseHuge.gateway.service.ListNodePrepare;
 import android.app.Activity;
@@ -18,11 +19,9 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -44,6 +43,7 @@ public class Fragment_listNode extends Fragment {
 	// dialog显示出来的当前节点的所有包的内容
 	List<Map<String, String>> content;
 	GridView gridview;
+	MySQLiteDbHelper mdbhelper;
 	SQLiteDatabase db;
 	ListNodePrepare nodePrepare;
 
@@ -73,6 +73,7 @@ public class Fragment_listNode extends Fragment {
 				false);
 		gridview = (GridView) view.findViewById(R.id.gridview);
 		nodePrepare = new ListNodePrepare();
+		mdbhelper = new MySQLiteDbHelper(this.getActivity());
 		/*
 		 * refreshButton = (Button) view.findViewById(R.id.refresh);
 		 * refreshButton.setOnClickListener(new OnClickListener() {
@@ -163,7 +164,7 @@ public class Fragment_listNode extends Fragment {
 		// 得到相应节点的全部包，参数为节点ID
 		private void getThePackage(String string) {
 			// TODO Auto-generated method stub
-			db = MainActivity.mDbhelper.getReadableDatabase();
+			db = mdbhelper.getReadableDatabase();
 			Cursor cursor = db.query("Telosb", new String[] { "Ctype",
 					"message", "receivetime" }, "NodeID=?",
 					new String[] { string }, null, null, "receivetime DESC");

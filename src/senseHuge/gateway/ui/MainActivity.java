@@ -110,7 +110,6 @@ public class MainActivity extends FragmentActivity {
 		aboutUs = (Button) findViewById(R.id.aboutUs);
 		quit = (Button) findViewById(R.id.quit);
 		topoStructure = (Button) findViewById(R.id.topoStructure);
-		
 
 		serialPortSetting.setOnClickListener(new ButtonClickListener());
 		sinkSetting.setOnClickListener(new ButtonClickListener());
@@ -232,19 +231,19 @@ public class MainActivity extends FragmentActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	@Override
-	public boolean onPrepareOptionsMenu (Menu menu) {
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem item = menu.findItem(R.id.serialPort_check);
-		System.out.println("item:"+item.getTitle());
 		String s = null;
-		if(MainActivity.serialPortConnect) {
+		if (MainActivity.serialPortConnect) {
 			s = "已连接";
-		}else 
+		} else
 			s = "未连接";
-		item.setTitle("串口连接状态："+s);
-		System.out.println("item:"+item.getTitle());
+		item.setTitle(item.getTitle() + ":"+s);
 		return true;
 	}
+
 	/**
 	 * mainactivity 初始化
 	 */
@@ -276,14 +275,6 @@ public class MainActivity extends FragmentActivity {
 
 		// 创建数据库表
 		mDbhelper = new MySQLiteDbHelper(MainActivity.this);
-		//菜单栏显示
-		String status = null;
-		if(MainActivity.serialPortConnect) {
-			status = "已连接";
-		}else {
-			status = "未连接";
-		}
-		
 		/*
 		 * httpserverState.setValue(true); serialState.setValue(true);
 		 * httpserverState.setValue(false);

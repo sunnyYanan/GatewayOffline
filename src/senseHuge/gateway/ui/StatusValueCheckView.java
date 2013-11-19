@@ -19,20 +19,13 @@ import android.view.View;
 
 /**
  * 折线图
- * 
- * @author 24K
- * @created 2013年8月14日15:11:52
- * @version 1.0
  */
 @SuppressLint({ "DrawAllocation", "FloatMath" })
 public class StatusValueCheckView extends View {
 
-	float s = 500;// 默认中间线位置
-	boolean isTouched = false;// 中间线点击位置变化控制
-
 	private int XOrigin = 40;// X轴起点
-	private int YOrigin = 330;// y轴起点
-	private int XLength = 500;// X轴长度
+	private int YOrigin = 320;// y轴起点
+	private int XLength = 550;// X轴长度
 	private int YLength = 300;// Y轴长度
 	private String[] XLabel; // X的刻度显示
 	private String[] YLabel; // Y的刻度显示
@@ -44,10 +37,11 @@ public class StatusValueCheckView extends View {
 	float xScale;
 	float yScale;
 
+	float s = XOrigin + XLength / 2 + 30;// 默认中间线位置
+	boolean isTouched = false;// 中间线点击位置变化控制
+
 	private Paint backLinePaint = new Paint();// 背景线。
 	private Paint textPaint = new Paint();// 文字
-	private Paint yTitlePaint = new Paint();// Y轴标题。
-	private Paint xTitlePaint = new Paint();// x轴标题。
 	private Paint titlePaint = new Paint();// 标题。
 	private Paint circleRGBPaint = new Paint();// 环形画笔。
 	// private Paint circelPaint = new Paint();// 拐点圆圈。
@@ -56,7 +50,7 @@ public class StatusValueCheckView extends View {
 	private Paint centerLinePaint = new Paint();// 中间竖线。
 
 	public void setTitle(String title, String xTitle, String yTitle) {
-		this.setTitle(Title);
+		this.setTitle(title);
 		this.setxTitle(xTitle);
 		this.setyTitle(yTitle);
 	}
@@ -88,6 +82,7 @@ public class StatusValueCheckView extends View {
 				- YLength + 6, backLinePaint); // 箭头
 		canvas.drawLine(XOrigin, YOrigin - YLength, XOrigin + 3, YOrigin
 				- YLength + 6, backLinePaint);
+		canvas.drawText(yTitle, XOrigin, YOrigin - YLength - 5, titlePaint);
 		// 设置X轴
 		xScale = getXScale();
 		canvas.drawLine(XOrigin, YOrigin, XOrigin + XLength, YOrigin,
@@ -109,6 +104,7 @@ public class StatusValueCheckView extends View {
 			} catch (Exception e) {
 			}
 		}
+		canvas.drawText(xTitle, XOrigin + XLength + 20, YOrigin, titlePaint);
 		// 画折点
 		for (int i = 0; i < this.XLabel.length; i++) {
 			canvas.drawCircle(XOrigin + i * xScale, YCoord(Data[i]), 2,
@@ -118,6 +114,27 @@ public class StatusValueCheckView extends View {
 				YOrigin - 3, backLinePaint); // 箭头
 		canvas.drawLine(XOrigin + XLength, YOrigin, XOrigin + XLength - 6,
 				YOrigin + 3, backLinePaint);
+		// 中间线
+		canvas.drawLine(s, YOrigin + 5, s, YOrigin - YLength, centerLinePaint);
+		canvas.drawLine(s - 10, YOrigin + 5, s + 10, YOrigin + 5,
+				centerLinePaint);
+		canvas.drawLine(s - 10, YOrigin - YLength, s + 10, YOrigin - YLength,
+				centerLinePaint);
+
+		// 判断中间线是否显示当前读数
+		for (int i = 0; i < this.XLabel.length; i++) {
+			float distance = Math.abs(XOrigin + i * xScale - s);
+			if (distance < 5) {
+				canvas.drawText(String.valueOf(Data[i]), s + 10, YOrigin
+						- YLength + 20, textPaint);
+				canvas.drawText(XLabel[i], s + 10, YOrigin - YLength + 20 + 20,
+						textPaint); // 文字
+			}
+		}
+
+		canvas.drawText(Title, XOrigin + XLength / 2, YOrigin - YLength,
+				titlePaint);
+
 	}
 
 	private float YCoord(float data2) // 计算绘制时的Y坐标，无数据时返回-999
@@ -143,58 +160,6 @@ public class StatusValueCheckView extends View {
 	private float getYScale() {
 		// TODO Auto-generated method stub
 		return this.getYLength() / this.getYLabel().length;
-	}
-
-	private void initPaint() {
-		// TODO Auto-generated method stub
-		backLinePaint.setStyle(Style.STROKE);
-		backLinePaint.setStrokeWidth((float) 0.7);
-		backLinePaint.setColor(Color.BLACK);
-		backLinePaint.setAntiAlias(true);// 锯齿不显示
-		textPaint.setStyle(Style.FILL);// 设置非填充
-		textPaint.setStrokeWidth(1);// 笔宽5像素
-		textPaint.setColor(Color.BLACK);// 设置为蓝笔
-		textPaint.setAntiAlias(true);// 锯齿不显示
-		textPaint.setTextAlign(Align.CENTER);
-		textPaint.setTextSize(15);
-		yTitlePaint.setStyle(Style.FILL);
-		yTitlePaint.setStrokeWidth(1);
-		yTitlePaint.setColor(Color.BLACK);
-		yTitlePaint.setAntiAlias(true);
-		yTitlePaint.setTextAlign(Align.CENTER);
-		yTitlePaint.setTextSize(18);
-		xTitlePaint.setStyle(Style.FILL);
-		xTitlePaint.setStrokeWidth(1);
-		xTitlePaint.setColor(Color.BLACK);
-		xTitlePaint.setAntiAlias(true);
-		xTitlePaint.setTextAlign(Align.CENTER);
-		xTitlePaint.setTextSize(18);
-		titlePaint.setStyle(Style.FILL);
-		titlePaint.setStrokeWidth(1);
-		titlePaint.setColor(Color.BLACK);
-		titlePaint.setAntiAlias(true);
-		titlePaint.setTextAlign(Align.CENTER);
-		titlePaint.setTextSize(18);
-		// circelPaint.setStyle(Style.FILL);
-		// circelPaint.setStrokeWidth(2);
-		// circelPaint.setColor(Color.YELLOW);
-		// circelPaint.setAntiAlias(true);
-		// innerCircelPaint.setStyle(Style.FILL);
-		// innerCircelPaint.setStrokeWidth(1);
-		// innerCircelPaint.setColor(Color.parseColor("#464646"));
-		// innerCircelPaint.setAntiAlias(true);
-		linePaint.setStyle(Style.FILL);
-		linePaint.setStrokeWidth(3);
-		linePaint.setColor(Color.rgb(255, 210, 0));// (1)黄色
-		linePaint.setAntiAlias(true);
-
-		centerLinePaint.setColor(Color.parseColor("#000000"));// 中间动态线。7DA62D
-		centerLinePaint.setStrokeWidth(3);
-
-		circleRGBPaint.setStrokeWidth(6);
-		circleRGBPaint.setAntiAlias(true);// 消除锯齿。
-		circleRGBPaint.setStyle(Style.STROKE);
-		circleRGBPaint.setColor(Color.parseColor("#4692B1"));//
 	}
 
 	/**
@@ -228,6 +193,38 @@ public class StatusValueCheckView extends View {
 			break;
 		}
 		return true;
+	}
+
+	private void initPaint() {
+		// TODO Auto-generated method stub
+		backLinePaint.setStyle(Style.STROKE);
+		backLinePaint.setStrokeWidth((float) 0.7);
+		backLinePaint.setColor(Color.BLACK);
+		backLinePaint.setAntiAlias(true);// 锯齿不显示
+		textPaint.setStyle(Style.FILL);// 设置非填充
+		textPaint.setStrokeWidth(1);// 笔宽5像素
+		textPaint.setColor(Color.BLACK);// 设置为蓝笔
+		textPaint.setAntiAlias(true);// 锯齿不显示
+		textPaint.setTextAlign(Align.CENTER);
+		textPaint.setTextSize(15);
+		titlePaint.setStyle(Style.FILL);
+		titlePaint.setStrokeWidth(1);
+		titlePaint.setColor(Color.parseColor("#4692B1"));
+		titlePaint.setAntiAlias(true);
+		titlePaint.setTextAlign(Align.CENTER);
+		titlePaint.setTextSize(18);
+		linePaint.setStyle(Style.FILL);
+		linePaint.setStrokeWidth(3);
+		linePaint.setColor(Color.rgb(255, 210, 0));// (1)黄色
+		linePaint.setAntiAlias(true);
+
+		centerLinePaint.setColor(Color.parseColor("#000000"));// 中间动态线。7DA62D
+		centerLinePaint.setStrokeWidth(3);
+
+		circleRGBPaint.setStrokeWidth(6);
+		circleRGBPaint.setAntiAlias(true);// 消除锯齿。
+		circleRGBPaint.setStyle(Style.STROKE);
+		circleRGBPaint.setColor(Color.parseColor("#4692B1"));//
 	}
 
 	public StatusValueCheckView(Context context) {
