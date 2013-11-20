@@ -45,60 +45,72 @@
             android:layout_height="wrap_content"
             android:text="@string/searchRecentUnit"
             android:textSize="20sp" />
-
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/dataCenterShow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/dataCenterShowSetting"
         android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/DBmessage"
-            android:layout_width="400dp"
+        <LinearLayout
+            android:layout_width="640dp"
             android:layout_height="wrap_content"
-            android:text="@string/message" >
-        </TextView>
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="640dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/DBmessage"
+                    android:layout_width="400dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/message" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/DBCtype"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Ctype" />
+
+                <TextView
+                    android:id="@+id/DBNodeID"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/NodeID" />
+
+                <TextView
+                    android:id="@+id/DBreceivetime"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/receivetime" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ListView>
+            <!--
+                 android:focusable="true"
+                android:focusableInTouchMode="true"
+            -->
+
+            <TextView
+                android:id="@android:id/empty"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/noData" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/DBCtype"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="@string/Ctype" />
-
-        <TextView
-            android:id="@+id/DBNodeID"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="@string/NodeID" />
-
-        <!-- <TextView
-            android:id="@+id/DBstatus"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="@string/status" /> -->
-
-        <TextView
-            android:id="@+id/DBreceivetime"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="@string/receivetime" />
+            android:id="@+id/dataParse"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="20dp" />
     </LinearLayout>
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dataCenterShow" >
-    </ListView>
-
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dataCenterShow"
-        android:text="@string/noData" />
 
 </RelativeLayout>

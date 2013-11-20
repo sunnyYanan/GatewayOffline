@@ -41,13 +41,13 @@ public final class R {
         public static final int mp3=0x7f020009;
     }
     public static final class id {
-        public static final int DBCtype=0x7f09001c;
+        public static final int DBCtype=0x7f09001b;
         public static final int DBCtypeShow=0x7f09000c;
-        public static final int DBNodeID=0x7f09001d;
+        public static final int DBNodeID=0x7f09001c;
         public static final int DBNodeIDShow=0x7f09000d;
-        public static final int DBmessage=0x7f09001b;
+        public static final int DBmessage=0x7f09001a;
         public static final int DBmessageShow=0x7f09000b;
-        public static final int DBreceivetime=0x7f09001e;
+        public static final int DBreceivetime=0x7f09001d;
         public static final int DBreceivetimeShow=0x7f09000e;
         public static final int aboutUs=0x7f090008;
         public static final int action_settings=0x7f090050;
@@ -61,8 +61,8 @@ public final class R {
         public static final int connect=0x7f09004c;
         public static final int controlButton=0x7f090033;
         public static final int dataCenter=0x7f090006;
-        public static final int dataCenterShow=0x7f09001a;
         public static final int dataCenterShowSetting=0x7f090016;
+        public static final int dataParse=0x7f09001e;
         public static final int eternetSetting=0x7f09001f;
         public static final int fragment_container=0x7f09000a;
         public static final int functionView=0x7f090000;

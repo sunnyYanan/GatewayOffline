@@ -17,10 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.example.testgateway.R;
 
@@ -30,6 +33,7 @@ public class Fragment_dataCenter extends ListFragment {
 	Button showAsTime;
 	private ContentResolver contentResolver;
 	EditText editText;
+	TextView dataParse;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,13 +46,28 @@ public class Fragment_dataCenter extends ListFragment {
 		showAll = (Button) view.findViewById(R.id.showAll);
 		showAsTime = (Button) view.findViewById(R.id.searchTitle);
 		editText = (EditText) view.findViewById(R.id.searchRecentNum);
+		dataParse = (TextView) view.findViewById(R.id.dataParse);
 
 		showAll.setOnClickListener(new MyButtonClickListener());
 		showAsTime.setOnClickListener(new MyButtonClickListener());
-
+//		list.setFocusable(true);
+//		list.setFocusableInTouchMode(true);
+		
 		showAllData();
-
+//		list.requestFocus();
 		return view;
+	}
+
+	private class MyItemClickListener implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			System.out.println("jjd");
+			dataParse.setText("dffdfd " + arg2);
+		}
+
 	}
 
 	private class MyButtonClickListener implements OnClickListener {
@@ -86,8 +105,10 @@ public class Fragment_dataCenter extends ListFragment {
 			item.put("Ctype", cursor.getString(cursor.getColumnIndex("Ctype")));
 			item.put("NodeID",
 					cursor.getString(cursor.getColumnIndex("NodeID")));
-			/*item.put("status",
-					cursor.getString(cursor.getColumnIndex("status")));*/
+			/*
+			 * item.put("status",
+			 * cursor.getString(cursor.getColumnIndex("status")));
+			 */
 			item.put("receivetime",
 					cursor.getString(cursor.getColumnIndex("receivetime")));
 			data.add(item);
@@ -97,8 +118,7 @@ public class Fragment_dataCenter extends ListFragment {
 				R.layout.data_center_style, new String[] { "message", "Ctype",
 						"NodeID", "receivetime" }, new int[] {
 						R.id.DBmessageShow, R.id.DBCtypeShow,
-						R.id.DBNodeIDShow,
-						R.id.DBreceivetimeShow });
+						R.id.DBNodeIDShow, R.id.DBreceivetimeShow });
 		/*
 		 * ( this.getActivity(), R.layout.data_center_style, cursor, new
 		 * String[] { "message", "Ctype", "NodeID", "status", "receivetime" },
@@ -107,6 +127,7 @@ public class Fragment_dataCenter extends ListFragment {
 		 * CursorAdapter.FLAG_AUTO_REQUERY);
 		 */
 		list.setAdapter(adapter);
+		list.setOnItemClickListener(new MyItemClickListener());
 		this.getActivity().startManagingCursor(cursor); // 查找后关闭游标
 	}
 
@@ -144,12 +165,12 @@ public class Fragment_dataCenter extends ListFragment {
 
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(
 				this.getActivity(), R.layout.data_center_style, cursor,
-				new String[] { "message", "Ctype", "NodeID",
-						"receivetime" }, new int[] { R.id.DBmessageShow,
-						R.id.DBCtypeShow, R.id.DBNodeIDShow,
-						R.id.DBreceivetimeShow },
+				new String[] { "message", "Ctype", "NodeID", "receivetime" },
+				new int[] { R.id.DBmessageShow, R.id.DBCtypeShow,
+						R.id.DBNodeIDShow, R.id.DBreceivetimeShow },
 				CursorAdapter.FLAG_AUTO_REQUERY);
 		list.setAdapter(adapter);
+		list.setOnItemClickListener(new MyItemClickListener());
 		this.getActivity().startManagingCursor(cursor); // 查找后关闭游标
 	}
 }
