@@ -43,10 +43,9 @@ public class Fragment_dataCenter extends ListFragment {
 		showAsTime = (Button) view.findViewById(R.id.searchTitle);
 		editText = (EditText) view.findViewById(R.id.searchRecentNum);
 
+		showAllData();
 		showAll.setOnClickListener(new MyButtonClickListener());
 		showAsTime.setOnClickListener(new MyButtonClickListener());
-
-		showAllData();
 
 		return view;
 	}
