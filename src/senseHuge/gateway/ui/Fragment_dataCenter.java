@@ -163,8 +163,6 @@ public class Fragment_dataCenter extends ListFragment {
 
 	}
 
-	
-
 	private void showSearch() {
 		// TODO Auto-generated method stub
 		// list.setEnabled(true);
@@ -172,42 +170,124 @@ public class Fragment_dataCenter extends ListFragment {
 				new String[] { "_id", "message", "Ctype", "NodeID",
 						"receivetime" }, null, null, "receivetime DESC");
 		int i = getTheInputNum();
-		if (i == 0) {
+		// 用户没有输入任何条件时，点击按钮默认搜索一条数据
+		if (i == 0 && !inputDate()) {
 			i = 1;
 		}
 		data = new ArrayList<Map<String, String>>();
-		Map<String, String> item;
-		while (cursor.moveToNext() && i > 0) {
-			item = new HashMap<String, String>();
-			item.put("message",
-					cursor.getString(cursor.getColumnIndex("message")));
-			item.put("Ctype", cursor.getString(cursor.getColumnIndex("Ctype")));
-			item.put("NodeID",
-					cursor.getString(cursor.getColumnIndex("NodeID")));
-			/*
-			 * item.put("status",
-			 * cursor.getString(cursor.getColumnIndex("status")));
-			 */
-			item.put("receivetime",
-					cursor.getString(cursor.getColumnIndex("receivetime")));
-			data.add(item);
-			i--;
+		// 如果用户输入了日期
+		if (inputDate()) {
+			cursor.moveToFirst();
+			searchIntervalData(data, cursor);
+		} else {// 搜索用户输入的最近几条数据
+			cursor.moveToFirst();
+			Map<String, String> item;
+			while (cursor.moveToNext() && i > 0) {
+				item = new HashMap<String, String>();
+				item.put("message",
+						cursor.getString(cursor.getColumnIndex("message")));
+				item.put("Ctype",
+						cursor.getString(cursor.getColumnIndex("Ctype")));
+				item.put("NodeID",
+						cursor.getString(cursor.getColumnIndex("NodeID")));
+				/*
+				 * item.put("status",
+				 * cursor.getString(cursor.getColumnIndex("status")));
+				 */
+				item.put("receivetime",
+						cursor.getString(cursor.getColumnIndex("receivetime")));
+				data.add(item);
+				i--;
+			}
 		}
 		SimpleAdapter adapter = new SimpleAdapter(this.getActivity(), data,
 				R.layout.data_center_style, new String[] { "message", "Ctype",
 						"NodeID", "receivetime" }, new int[] {
 						R.id.DBmessageShow, R.id.DBCtypeShow,
 						R.id.DBNodeIDShow, R.id.DBreceivetimeShow });
-		/*
-		 * ( this.getActivity(), R.layout.data_center_style, cursor, new
-		 * String[] { "message", "Ctype", "NodeID", "status", "receivetime" },
-		 * new int[] { R.id.DBmessageShow, R.id.DBCtypeShow, R.id.DBNodeIDShow,
-		 * R.id.DBstatusShow, R.id.DBreceivetimeShow },
-		 * CursorAdapter.FLAG_AUTO_REQUERY);
-		 */
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(new MyItemClickListener());
-		this.getActivity().startManagingCursor(cursor); // 查找后关闭游标
+		// this.getActivity().startManagingCursor(cursor); // 查找后关闭游标
+		cursor.close();
+	}
+
+	private void searchIntervalData(List<Map<String, String>> data,
+			Cursor cursor) {
+		// TODO Auto-generated method stub
+		String startDate = startDateShow.getText().toString();
+		String endDate = endDateShow.getText().toString();
+		// 输入开始日期小于结束日期
+		if (isValid(startDate, endDate)) {
+			Map<String, String> item;
+			while (cursor.moveToNext()) {
+				String receiveTime = cursor.getString(cursor
+						.getColumnIndex("receivetime"));
+				if (isValid(startDate, receiveTime)
+						&& isValid(receiveTime, endDate)) {
+					item = new HashMap<String, String>();
+					item.put("message",
+							cursor.getString(cursor.getColumnIndex("message")));
+					item.put("Ctype",
+							cursor.getString(cursor.getColumnIndex("Ctype")));
+					item.put("NodeID",
+							cursor.getString(cursor.getColumnIndex("NodeID")));
+					item.put("receivetime", cursor.getString(cursor
+							.getColumnIndex("receivetime")));
+					data.add(item);
+				}
+
+			}
+		}
+	}
+
+	private boolean isValid(String startDate, String endDate) {
+		// TODO Auto-generated method stub
+		String[] startStr = startDate.split(" ");
+		String[] start = startStr[0].split("-");
+		String[] startTime = startStr[1].split(":");
+		int startYear = Integer.parseInt(start[0]);
+		int startMonth = Integer.parseInt(start[1]);
+		int startDay = Integer.parseInt(start[2]);
+		int startHour = Integer.parseInt(startTime[0]);
+		int startMinute = Integer.parseInt(startTime[1]);
+
+		String[] endStr = endDate.split(" ");
+		String[] end = endStr[0].split("-");
+		String[] endTime = endStr[1].split(":");
+		int endYear = Integer.parseInt(end[0]);
+		int endMonth = Integer.parseInt(end[1]);
+		int endDay = Integer.parseInt(end[2]);
+		int endHour = Integer.parseInt(endTime[0]);
+		int endMinute = Integer.parseInt(endTime[1]);
+
+		if (endYear < startYear)
+			return false;
+		else if (endYear == startYear) {
+			if (endMonth < startMonth)
+				return false;
+			else if (endMonth == startMonth) {
+				if (endDay < startDay)
+					return false;
+				else if (endDay == startDay) {
+					if (endHour < startHour)
+						return false;
+					else if (endHour == startHour) {
+						if (endMinute < startMinute)
+							return false;
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	private boolean inputDate() {
+		// TODO Auto-generated method stub
+		if (startDateShow.getText().equals("")
+				|| endDateShow.getText().equals(""))
+			return false;
+		return true;
 	}
 
 	@SuppressLint("NewApi")
