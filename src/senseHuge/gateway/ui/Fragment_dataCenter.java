@@ -2,9 +2,11 @@ package senseHuge.gateway.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import senseHuge.gateway.model.PackagePattern;
 import senseHuge.gateway.service.DataProvider;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -17,10 +19,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.example.testgateway.R;
 
@@ -30,6 +35,8 @@ public class Fragment_dataCenter extends ListFragment {
 	Button showAsTime;
 	private ContentResolver contentResolver;
 	EditText editText;
+	TextView dataParse;
+	List<Map<String, String>> data;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,12 +49,64 @@ public class Fragment_dataCenter extends ListFragment {
 		showAll = (Button) view.findViewById(R.id.showAll);
 		showAsTime = (Button) view.findViewById(R.id.searchTitle);
 		editText = (EditText) view.findViewById(R.id.searchRecentNum);
+		dataParse = (TextView) view.findViewById(R.id.dataParse);
+
+		// list.setItemsCanFocus(false);
 
 		showAllData();
+
 		showAll.setOnClickListener(new MyButtonClickListener());
 		showAsTime.setOnClickListener(new MyButtonClickListener());
+		// list.setFocusable(true);
+		// list.setFocusableInTouchMode(true);
 
+		// showAllData();
+		// list.requestFocus();
 		return view;
+	}
+
+	private class MyItemClickListener implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			Map<String, String> packageMessage = data.get(arg2);
+			dataParse.setText("dffdfd " + arg2);
+			Iterator<?> it = packageMessage.entrySet().iterator();
+			String message;
+			PackagePattern pp;
+			// 取出当前需要解析的数据
+			while (it.hasNext()) {
+				Map.Entry pairs = (Map.Entry) it.next();
+				if (pairs.getKey().equals("message")) {
+					message = pairs.getValue().toString();
+					try {
+						pp = MainActivity.xmlTelosbPackagePatternUtil
+								.parseTelosbPackage(message);
+						showTheParsedPackage(pp);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+
+		}
+
+		private void showTheParsedPackage(PackagePattern pp) {
+			// TODO Auto-generated method stub
+			Iterator<?> it = pp.DataField.entrySet().iterator();
+			StringBuffer sb = new StringBuffer();
+			while (it.hasNext()) {
+				Map.Entry pairs = (Map.Entry) it.next();
+				sb.append(pairs.getKey().toString() + ": "
+						+ pairs.getValue().toString());
+				sb.append("\n");
+			}
+			dataParse.setText(sb.toString());
+		}
+
 	}
 
 	private class MyButtonClickListener implements OnClickListener {
@@ -69,6 +128,7 @@ public class Fragment_dataCenter extends ListFragment {
 
 	private void showRecent() {
 		// TODO Auto-generated method stub
+//		list.setEnabled(true);
 		Cursor cursor = contentResolver.query(DataProvider.CONTENT_URI,
 				new String[] { "_id", "message", "Ctype", "NodeID",
 						"receivetime" }, null, null, "receivetime DESC");
@@ -76,7 +136,7 @@ public class Fragment_dataCenter extends ListFragment {
 		if (i == 0) {
 			i = 1;
 		}
-		List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+		data = new ArrayList<Map<String, String>>();
 		Map<String, String> item;
 		while (cursor.moveToNext() && i > 0) {
 			item = new HashMap<String, String>();
@@ -85,8 +145,10 @@ public class Fragment_dataCenter extends ListFragment {
 			item.put("Ctype", cursor.getString(cursor.getColumnIndex("Ctype")));
 			item.put("NodeID",
 					cursor.getString(cursor.getColumnIndex("NodeID")));
-			/*item.put("status",
-					cursor.getString(cursor.getColumnIndex("status")));*/
+			/*
+			 * item.put("status",
+			 * cursor.getString(cursor.getColumnIndex("status")));
+			 */
 			item.put("receivetime",
 					cursor.getString(cursor.getColumnIndex("receivetime")));
 			data.add(item);
@@ -96,8 +158,7 @@ public class Fragment_dataCenter extends ListFragment {
 				R.layout.data_center_style, new String[] { "message", "Ctype",
 						"NodeID", "receivetime" }, new int[] {
 						R.id.DBmessageShow, R.id.DBCtypeShow,
-						R.id.DBNodeIDShow,
-						R.id.DBreceivetimeShow });
+						R.id.DBNodeIDShow, R.id.DBreceivetimeShow });
 		/*
 		 * ( this.getActivity(), R.layout.data_center_style, cursor, new
 		 * String[] { "message", "Ctype", "NodeID", "status", "receivetime" },
@@ -106,6 +167,7 @@ public class Fragment_dataCenter extends ListFragment {
 		 * CursorAdapter.FLAG_AUTO_REQUERY);
 		 */
 		list.setAdapter(adapter);
+		list.setOnItemClickListener(new MyItemClickListener());
 		this.getActivity().startManagingCursor(cursor); // 查找后关闭游标
 	}
 
@@ -137,18 +199,20 @@ public class Fragment_dataCenter extends ListFragment {
 		// Cursor cursor = MainActivity.mDb.query("Telosb", new String[] {
 		// "message", "Ctype", "NodeID", "status", "receivetime" }, null,
 		// null, null, null, "receivetime DESC");
+//		list.setEnabled(false);
 		Cursor cursor = contentResolver.query(DataProvider.CONTENT_URI,
 				new String[] { "_id", "message", "Ctype", "NodeID",
 						"receivetime" }, null, null, "receivetime DESC");
 
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(
 				this.getActivity(), R.layout.data_center_style, cursor,
-				new String[] { "message", "Ctype", "NodeID",
-						"receivetime" }, new int[] { R.id.DBmessageShow,
-						R.id.DBCtypeShow, R.id.DBNodeIDShow,
-						R.id.DBreceivetimeShow },
+				new String[] { "message", "Ctype", "NodeID", "receivetime" },
+				new int[] { R.id.DBmessageShow, R.id.DBCtypeShow,
+						R.id.DBNodeIDShow, R.id.DBreceivetimeShow },
 				CursorAdapter.FLAG_AUTO_REQUERY);
 		list.setAdapter(adapter);
+		list.setOnItemClickListener(null);
+		dataParse.setText("");
 		this.getActivity().startManagingCursor(cursor); // 查找后关闭游标
 	}
 }
