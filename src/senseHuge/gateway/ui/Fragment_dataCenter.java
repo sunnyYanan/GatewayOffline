@@ -1,6 +1,7 @@
 package senseHuge.gateway.ui;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,10 +9,15 @@ import java.util.Map;
 
 import senseHuge.gateway.model.PackagePattern;
 import senseHuge.gateway.service.DataProvider;
+import senseHuge.gateway.util.DatePickerFragment;
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -22,10 +28,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.testgateway.R;
 
@@ -33,10 +41,18 @@ public class Fragment_dataCenter extends ListFragment {
 	ListView list;
 	Button showAll;
 	Button showAsTime;
+	Button startDateButton;
+	Button endDateButton;
 	private ContentResolver contentResolver;
 	EditText editText;
 	TextView dataParse;
+	public static TextView startDateShow;
+	public static TextView endDateShow;
 	List<Map<String, String>> data;
+	public static boolean isStartDate = false;
+
+	DatePickerFragment startFragment;
+	DatePickerFragment endFragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +66,10 @@ public class Fragment_dataCenter extends ListFragment {
 		showAsTime = (Button) view.findViewById(R.id.searchTitle);
 		editText = (EditText) view.findViewById(R.id.searchRecentNum);
 		dataParse = (TextView) view.findViewById(R.id.dataParse);
+		startDateButton = (Button) view.findViewById(R.id.startDatePick);
+		endDateButton = (Button) view.findViewById(R.id.endDatePick);
+		startDateShow = (TextView) view.findViewById(R.id.startDateShow);
+		endDateShow = (TextView) view.findViewById(R.id.endDateShow);
 
 		// list.setItemsCanFocus(false);
 
@@ -57,6 +77,8 @@ public class Fragment_dataCenter extends ListFragment {
 
 		showAll.setOnClickListener(new MyButtonClickListener());
 		showAsTime.setOnClickListener(new MyButtonClickListener());
+		startDateButton.setOnClickListener(new MyButtonClickListener());
+		endDateButton.setOnClickListener(new MyButtonClickListener());
 		// list.setFocusable(true);
 		// list.setFocusableInTouchMode(true);
 
@@ -119,16 +141,33 @@ public class Fragment_dataCenter extends ListFragment {
 				showAllData();
 				break;
 			case R.id.searchTitle:
-				showRecent();
+				showSearch();
+				break;
+			case R.id.startDatePick:
+				startFragment = new DatePickerFragment();
+				startFragment.show(getFragmentManager(), "startDatePicker");
+				editText.setText("");
+				isStartDate = true;
+				// System.out.println(startFragment.getDate());
+				// System.out.println(startFragment.getDate());
+				break;
+			case R.id.endDatePick:
+				endFragment = new DatePickerFragment();
+				endFragment.show(getFragmentManager(), "endDatePicker");
+				editText.setText("");
+				isStartDate = false;
+				// endDateShow.setText(endFragment.getDate());
 				break;
 			}
 		}
 
 	}
 
-	private void showRecent() {
+	
+
+	private void showSearch() {
 		// TODO Auto-generated method stub
-//		list.setEnabled(true);
+		// list.setEnabled(true);
 		Cursor cursor = contentResolver.query(DataProvider.CONTENT_URI,
 				new String[] { "_id", "message", "Ctype", "NodeID",
 						"receivetime" }, null, null, "receivetime DESC");
@@ -199,7 +238,7 @@ public class Fragment_dataCenter extends ListFragment {
 		// Cursor cursor = MainActivity.mDb.query("Telosb", new String[] {
 		// "message", "Ctype", "NodeID", "status", "receivetime" }, null,
 		// null, null, null, "receivetime DESC");
-//		list.setEnabled(false);
+		// list.setEnabled(false);
 		Cursor cursor = contentResolver.query(DataProvider.CONTENT_URI,
 				new String[] { "_id", "message", "Ctype", "NodeID",
 						"receivetime" }, null, null, "receivetime DESC");

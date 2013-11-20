@@ -50,6 +50,8 @@
     <string name="NodeID">NodeID</string>
     <string name="status">status</string>
     <string name="receivetime">receivetime</string>
+    <string name="startDate">起始日期</string>
+    <string name="endDate">结束日期</string>
     <string name="topoStructure">拓扑结构</string>
     <string name="aboutUs">公司介绍</string>
     <string name="quit">退出</string>
