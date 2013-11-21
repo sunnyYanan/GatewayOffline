@@ -21,6 +21,7 @@ import com.example.testgateway.R;
 
 public class ListNodePrepare {
 	SQLiteDatabase db;
+//	Fragment_listNode node = new Fragment_listNode();
 	public static String currentId = null;
 	public static boolean changed = true;
 
@@ -30,11 +31,12 @@ public class ListNodePrepare {
 	}
 
 	public synchronized void prepare(String nodeId) {
-		changed = false;
+//		changed = false;
 		db = MainActivity.mDbhelper.getReadableDatabase();
 		addNodeIntoList(nodeId);
-		changed = true;
+//		changed = true;
 	}
+
 	class MyThread implements Runnable {
 		@Override
 		public void run() {
@@ -55,45 +57,63 @@ public class ListNodePrepare {
 				Fragment_listNode.nodeId.add(id);
 			}
 		}
-//		Fragment_listNode.nodeList.clear();
-		//初始显示数据
+		// Fragment_listNode.nodeList.clear();
+		// 初始显示数据
 		Collections.sort(Fragment_listNode.nodeId);
 		for (int i = 0; i < Fragment_listNode.nodeId.size(); i++) {
 			System.out.println("节点：" + Fragment_listNode.nodeId.get(i));
-			addNodeIntoList(Fragment_listNode.nodeId.get(i));
+			addNodeIntoListFirstTime(Fragment_listNode.nodeId.get(i));
 		}
 		cursor.close();
 	}
-	
+
+	private void addNodeIntoListFirstTime(String nodeId) {
+		Map<String, Object> item = new HashMap<String, Object>();
+		item.put("图片", R.drawable.ic_launcher);
+		item.put("源节点编号", nodeId);
+		// System.out.println("加入节点："+nodeId);
+		computeTheNodePower(nodeId, item);
+		// item.put("节点电压", "11");
+		Fragment_listNode.getShowData().add(item);
+	}
 
 	// 将节点加入到显示列表中
-	private void addNodeIntoList(String nodeId) {
+	private synchronized void addNodeIntoList(String nodeId) {
 		// TODO Auto-generated method stub
-//		Fragment_listNode.nodeList.remove(Fragment_listNode.nodeList.)
-		for(int i = 0; i<Fragment_listNode.nodeList.size(); i++) {
-			if(Fragment_listNode.nodeList.get(i).get("源节点编号").equals(nodeId)){
-				Fragment_listNode.nodeList.remove(i);
+		// Fragment_listNode.nodeList.remove(Fragment_listNode.nodeList.)
+		// System.out.println("1");
+		for (int i = 0; i < Fragment_listNode.getShowData().size(); i++) {
+			if (Fragment_listNode.getShowData().get(i).get("源节点编号")
+					.equals(nodeId)) {
+				Fragment_listNode.getShowData().remove(i);
 				break;
 			}
 		}
 		Map<String, Object> item = new HashMap<String, Object>();
 		item.put("图片", R.drawable.ic_launcher);
 		item.put("源节点编号", nodeId);
-//		System.out.println("加入节点："+nodeId);
+		// System.out.println("加入节点："+nodeId);
+		System.out.println("当前节点：" + nodeId);
 		computeTheNodePower(nodeId, item);
 		// item.put("节点电压", "11");
-		Fragment_listNode.nodeList.add(item);
-		Collections.sort(Fragment_listNode.nodeList, new MyComparator());
+		System.out.println("3");
+		Fragment_listNode.getShowData().add(item);
+		Collections.sort(Fragment_listNode.getShowData(), new MyComparator());
+//		node.refresh();
+//		Fragment_listNode.adapter.notifyDataSetChanged();
 	}
+
 	private class MyComparator implements Comparator<Object> {
 
 		@Override
 		public int compare(Object arg0, Object arg1) {
 			// TODO Auto-generated method stub
-			return ((Map<String,String>) arg0).get("源节点编号").compareTo(((Map<String,String>)arg1).get("源节点编号"));
+			return ((Map<String, String>) arg0).get("源节点编号").compareTo(
+					((Map<String, String>) arg1).get("源节点编号"));
 		}
-		
+
 	}
+
 	/**
 	 * @param string
 	 *            节点编号的字符串标识
@@ -164,7 +184,7 @@ public class ListNodePrepare {
 		System.out.println("average power：" + b);
 
 		String trige = findIftriger();
-		if (trige!=null && b != 0 && trige.equals("1")) {
+		if (trige != null && b != 0 && trige.equals("1")) {
 			TrigerTheAlert(b);
 		}
 		return b;
@@ -193,7 +213,7 @@ public class ListNodePrepare {
 			String valueStr = alert.substring(0, pos);
 			float value = Float.parseFloat(valueStr);
 			if (b / 2.5 <= (value / 100)) {
-				System.out.println("比值:"+b/2.5);
+				System.out.println("比值:" + b / 2.5);
 				// 播放音乐
 				String musicPath = findTheAlertMusicPath();
 				System.out.println("musicPath " + musicPath);
