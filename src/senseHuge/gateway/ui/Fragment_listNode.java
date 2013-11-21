@@ -85,12 +85,12 @@ public class Fragment_listNode extends Fragment {
 		 */
 		show();
 		// 实时刷新
-//		if (MainActivity.serialPortConnect)
-//			new Thread(new MyThread()).start();
+		if (MainActivity.serialPortConnect)
+			new Thread(new MyThread()).start();
 		return view;
 	}
 
-	/*Handler handler = new Handler() {
+	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			// 要做的事情
 			super.handleMessage(msg);
@@ -119,21 +119,19 @@ public class Fragment_listNode extends Fragment {
 				}
 			}
 		}
-	}*/
-	 
+	}
+
 	private void show() {
 		// TODO Auto-generated method stub
 		// 实例化一个适配器
-		adapter = new SimpleAdapter(this.getActivity(), getShowData(),
+		adapter = new SimpleAdapter(this.getActivity(), nodeList,
 				R.layout.list_node_page_style, new String[] { "图片", "源节点编号",
 						"节点电压" }, new int[] { R.id.listNodeImage,
 						R.id.listNodeId, R.id.listNodePower });
 		gridview.setAdapter(adapter);
 		gridview.setOnItemClickListener(new MyItemClickListener());
 	}
-	public synchronized static List<Map<String, Object>> getShowData() {
-		return nodeList;
-	}
+
 	class MyItemClickListener implements OnItemClickListener {
 
 		@Override
