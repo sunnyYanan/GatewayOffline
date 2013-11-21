@@ -54,37 +54,48 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="20dp"
                 android:text="@string/granularity"
                 android:textSize="20sp" />
 
             <Spinner
                 android:id="@+id/granularity"
-                android:layout_width="100dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="10dp"
                 android:text="@string/nodeSelectIns"
                 android:textSize="20sp" />
 
             <Spinner
                 android:id="@+id/nodeSelectSpinner"
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content" />
+            
+            <Button
+                android:id = "@+id/statueDateSet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:text="@string/statusDateSet"/>
+            <TextView
+                android:id="@+id/statusDateShow"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
                 android:text="@string/itemNum"
                 android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/itemNum"
-                android:layout_width="100dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:inputType="number" />
 
@@ -92,7 +103,6 @@
                 android:id="@+id/statusButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
                 android:gravity="right"
                 android:text="@string/settingOK" />
         </LinearLayout>
