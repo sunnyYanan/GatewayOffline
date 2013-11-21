@@ -1,9 +1,12 @@
 package senseHuge.gateway.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import senseHuge.gateway.model.PackagePattern;
@@ -19,12 +22,19 @@ import com.example.testgateway.R;
 public class ListNodePrepare {
 	SQLiteDatabase db;
 	public static String currentId = null;
+	public static boolean changed = true;
 
 	public void prepare() {
 		Thread listNodeThread = new Thread(new MyThread());
 		listNodeThread.start();
 	}
 
+	public synchronized void prepare(String nodeId) {
+		changed = false;
+		db = MainActivity.mDbhelper.getReadableDatabase();
+		addNodeIntoList(nodeId);
+		changed = true;
+	}
 	class MyThread implements Runnable {
 		@Override
 		public void run() {
@@ -34,7 +44,7 @@ public class ListNodePrepare {
 	}
 
 	// 在解析后的数据中提取出节点编号，若无重复就存入要显示的节点列表中
-	private void getTheNodeInfo() {
+	private synchronized void getTheNodeInfo() {
 		// TODO Auto-generated method stub
 		db = MainActivity.mDbhelper.getReadableDatabase();
 		Cursor cursor = db.query("Telosb", new String[] { "NodeID" }, null,
@@ -45,7 +55,8 @@ public class ListNodePrepare {
 				Fragment_listNode.nodeId.add(id);
 			}
 		}
-		Fragment_listNode.nodeList.clear();
+//		Fragment_listNode.nodeList.clear();
+		//初始显示数据
 		Collections.sort(Fragment_listNode.nodeId);
 		for (int i = 0; i < Fragment_listNode.nodeId.size(); i++) {
 			System.out.println("节点：" + Fragment_listNode.nodeId.get(i));
@@ -53,18 +64,36 @@ public class ListNodePrepare {
 		}
 		cursor.close();
 	}
+	
 
 	// 将节点加入到显示列表中
 	private void addNodeIntoList(String nodeId) {
 		// TODO Auto-generated method stub
+//		Fragment_listNode.nodeList.remove(Fragment_listNode.nodeList.)
+		for(int i = 0; i<Fragment_listNode.nodeList.size(); i++) {
+			if(Fragment_listNode.nodeList.get(i).get("源节点编号").equals(nodeId)){
+				Fragment_listNode.nodeList.remove(i);
+				break;
+			}
+		}
 		Map<String, Object> item = new HashMap<String, Object>();
 		item.put("图片", R.drawable.ic_launcher);
 		item.put("源节点编号", nodeId);
+//		System.out.println("加入节点："+nodeId);
 		computeTheNodePower(nodeId, item);
 		// item.put("节点电压", "11");
 		Fragment_listNode.nodeList.add(item);
+		Collections.sort(Fragment_listNode.nodeList, new MyComparator());
 	}
+	private class MyComparator implements Comparator<Object> {
 
+		@Override
+		public int compare(Object arg0, Object arg1) {
+			// TODO Auto-generated method stub
+			return ((Map<String,String>) arg0).get("源节点编号").compareTo(((Map<String,String>)arg1).get("源节点编号"));
+		}
+		
+	}
 	/**
 	 * @param string
 	 *            节点编号的字符串标识

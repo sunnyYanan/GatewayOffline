@@ -75,7 +75,7 @@ public final class R {
         public static final int imgBackFolder=0x7f090011;
         public static final int imgFileIcon=0x7f09000f;
         public static final int interfaceShow=0x7f09003c;
-        public static final int itemNum=0x7f09003f;
+        public static final int itemNum=0x7f090040;
         public static final int light=0x7f090039;
         public static final int linkSetting=0x7f090003;
         public static final int listNodeId=0x7f09004b;
@@ -84,7 +84,7 @@ public final class R {
         public static final int musicSelect=0x7f090035;
         public static final int myView=0x7f090042;
         public static final int no=0x7f090033;
-        public static final int nodeSelectSpinner=0x7f090040;
+        public static final int nodeSelectSpinner=0x7f09003f;
         public static final int packageLeft=0x7f090047;
         public static final int packageMessage=0x7f090045;
         public static final int packageReceivetime=0x7f090046;

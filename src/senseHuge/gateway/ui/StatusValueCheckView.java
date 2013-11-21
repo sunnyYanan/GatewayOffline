@@ -151,11 +151,15 @@ public class StatusValueCheckView extends View {
 
 	private float getXScale() {
 		// TODO Auto-generated method stub
+		if(this.getXLabel().length==0)
+			return 0;
 		return this.getXLength() / this.getXLabel().length;
 	}
 
 	private float getYScale() {
 		// TODO Auto-generated method stub
+		if(this.getYLabel().length==0)
+			return 0;
 		return this.getYLength() / this.getYLabel().length;
 	}
 

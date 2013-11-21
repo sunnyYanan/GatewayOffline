@@ -34,7 +34,7 @@ public class Fragment_listNode extends Fragment {
 	public static List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
 	// 查找出来的显示的不重复的节点id
 	public static List<String> nodeId = new ArrayList<String>();
-	SimpleAdapter adapter;
+	public static SimpleAdapter adapter;
 	// public static boolean isChange = false;
 	ListView packageList;
 	View dialog;
@@ -96,8 +96,8 @@ public class Fragment_listNode extends Fragment {
 			super.handleMessage(msg);
 			switch (msg.arg1) {
 			case 1:
-				nodePrepare.prepare();
-				adapter.notifyDataSetChanged();
+				if (ListNodePrepare.changed)
+					adapter.notifyDataSetChanged();
 			}
 
 		}
@@ -109,7 +109,7 @@ public class Fragment_listNode extends Fragment {
 			// TODO Auto-generated method stub
 			while (true) {
 				try {
-					Thread.sleep(2000);// 线程暂停2秒，单位毫秒
+					Thread.sleep(1000);// 线程暂停2秒，单位毫秒
 					Message message = new Message();
 					message.arg1 = 1;
 					handler.sendMessage(message);// 发送消息

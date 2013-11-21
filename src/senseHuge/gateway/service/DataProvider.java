@@ -1,5 +1,7 @@
 package senseHuge.gateway.service;
 
+import java.util.Collections;
+
 import senseHuge.gateway.Dao.MySQLiteDbHelper;
 import senseHuge.gateway.ui.Fragment_listNode;
 import android.content.ContentProvider;
@@ -13,7 +15,8 @@ import android.net.Uri;
 public class DataProvider extends ContentProvider {
 	MySQLiteDbHelper dbHelper;
 	SQLiteDatabase db;
-
+	ListNodePrepare nodePrepare;
+	
 	public static final String AUTHORITY = "senseHuge.gateway.service";
 
 	/**
@@ -60,8 +63,14 @@ public class DataProvider extends ContentProvider {
 		if (rowId > 0) {
 			Uri noteUri = ContentUris.withAppendedId(CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(noteUri, null);
-			// 刷新listnode页面
-			// nodePrepare.prepare();
+			// 刷新listnode页面数据
+			String nodeId = arg1.get("NodeID").toString();
+			if (!Fragment_listNode.nodeId.contains(nodeId)) {
+				Fragment_listNode.nodeId.add(nodeId);
+				Collections.sort(Fragment_listNode.nodeId);
+			}
+			nodePrepare.prepare(nodeId);
+//			Fragment_listNode.adapter.notifyDataSetChanged();
 			return noteUri;
 		}
 		return null;
@@ -71,7 +80,7 @@ public class DataProvider extends ContentProvider {
 	public boolean onCreate() {
 		// TODO Auto-generated method stub
 		dbHelper = new MySQLiteDbHelper(this.getContext());
-		
+		nodePrepare = new ListNodePrepare();
 		return true;
 
 	}

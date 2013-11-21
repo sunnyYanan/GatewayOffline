@@ -144,6 +144,7 @@ public class Fragment_statusValueCheck extends Fragment {
 		for(int i= temp-1,j=0; i>=0; i--,j++) {
 			data[j] = dataTemp.get(i);
 			xLabel[j] = xLabelTemp.get(i);
+			System.out.println("ºá×ø±ê£º"+xLabelTemp.get(i));
 		}
 		String[] yLabel = setYLabel(data, granularity);
 		statusView.setData(xLabel, // XÖá¿Ì¶È
