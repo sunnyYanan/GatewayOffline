@@ -124,14 +124,16 @@ public class Fragment_listNode extends Fragment {
 	private void show() {
 		// TODO Auto-generated method stub
 		// 实例化一个适配器
-		adapter = new SimpleAdapter(this.getActivity(), nodeList,
+		adapter = new SimpleAdapter(this.getActivity(), getNodes(),
 				R.layout.list_node_page_style, new String[] { "图片", "源节点编号",
 						"节点电压" }, new int[] { R.id.listNodeImage,
 						R.id.listNodeId, R.id.listNodePower });
 		gridview.setAdapter(adapter);
 		gridview.setOnItemClickListener(new MyItemClickListener());
 	}
-
+	public static synchronized List<Map<String, Object>> getNodes() {
+		return nodeList;
+	}
 	class MyItemClickListener implements OnItemClickListener {
 
 		@Override

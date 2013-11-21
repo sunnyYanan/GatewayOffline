@@ -151,6 +151,7 @@ public class Fragment_statusValueCheck extends Fragment {
 				yLabel, // YÖá¿Ì¶È
 				data);// Êý¾Ý);
 		cursor.close();
+		mdb.close();
 	}
 
 	private float transformValue(String value, PackagePattern mpp) {

@@ -70,9 +70,10 @@ public class ListNodePrepare {
 	private void addNodeIntoList(String nodeId) {
 		// TODO Auto-generated method stub
 //		Fragment_listNode.nodeList.remove(Fragment_listNode.nodeList.)
-		for(int i = 0; i<Fragment_listNode.nodeList.size(); i++) {
-			if(Fragment_listNode.nodeList.get(i).get("源节点编号").equals(nodeId)){
-				Fragment_listNode.nodeList.remove(i);
+		List<Map<String, Object>> nodes = Fragment_listNode.getNodes();
+		for(int i = 0; i<nodes.size(); i++) {
+			if(nodes.get(i).get("源节点编号").equals(nodeId)){
+				nodes.remove(i);
 				break;
 			}
 		}
@@ -82,8 +83,8 @@ public class ListNodePrepare {
 //		System.out.println("加入节点："+nodeId);
 		computeTheNodePower(nodeId, item);
 		// item.put("节点电压", "11");
-		Fragment_listNode.nodeList.add(item);
-		Collections.sort(Fragment_listNode.nodeList, new MyComparator());
+		nodes.add(item);
+		Collections.sort(nodes, new MyComparator());
 	}
 	private class MyComparator implements Comparator<Object> {
 

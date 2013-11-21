@@ -58,7 +58,7 @@ public class DataProvider extends ContentProvider {
 		if (uriMatcher.match(arg0) != MESSAGE) {
 			throw new IllegalArgumentException("Unknown URI" + arg0);
 		}
-		System.out.println("insert");
+		
 		rowId = db.insert(MySQLiteDbHelper.TABLEMESSAGE, null, arg1);
 		if (rowId > 0) {
 			Uri noteUri = ContentUris.withAppendedId(CONTENT_URI, rowId);
@@ -70,6 +70,7 @@ public class DataProvider extends ContentProvider {
 				Collections.sort(Fragment_listNode.nodeId);
 			}
 			nodePrepare.prepare(nodeId);
+			System.out.println("insert"+nodeId);
 //			Fragment_listNode.adapter.notifyDataSetChanged();
 			return noteUri;
 		}
