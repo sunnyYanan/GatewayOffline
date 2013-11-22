@@ -177,7 +177,7 @@ public class Fragment_statusValueCheck extends Fragment {
 					.getString(cursor.getColumnIndex("receivetime"));
 			List<Integer> curDate = new ArrayList<Integer>();
 			getDate(curDate, time);
-			if (findIt(inputDate, curDate)) {
+			if (findIt(inputDate, curDate)) {//找到比当前输入日期小的那条记录
 				String message = cursor.getString(cursor.getColumnIndex("message"));
 				try {
 					// 解析后的数据
