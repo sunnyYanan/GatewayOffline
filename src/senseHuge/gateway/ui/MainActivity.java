@@ -240,7 +240,7 @@ public class MainActivity extends FragmentActivity {
 			s = "已连接";
 		} else
 			s = "未连接";
-		item.setTitle(item.getTitle() + ":"+s);
+		item.setTitle(item.getTitle() + ":" + s);
 		return true;
 	}
 

@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import com.example.testgateway.R;
 
-public class Fragment_listNode extends Fragment {
+public class Fragment_listNode extends Fragment{
 	// 界面显示的节点数据
 	public static List<Map<String, Object>> nodeList = new ArrayList<Map<String, Object>>();
 	// 查找出来的显示的不重复的节点id

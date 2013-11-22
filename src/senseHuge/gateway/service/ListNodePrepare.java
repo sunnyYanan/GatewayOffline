@@ -12,6 +12,7 @@ import java.util.Map;
 import senseHuge.gateway.model.PackagePattern;
 import senseHuge.gateway.ui.Fragment_listNode;
 import senseHuge.gateway.ui.MainActivity;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
@@ -34,6 +35,9 @@ public class ListNodePrepare {
 		db = MainActivity.mDbhelper.getReadableDatabase();
 		addNodeIntoList(nodeId);
 		changed = true;
+		/*IntentFilter filter = new IntentFilter();
+		filter.addAction("android.provider.Telephony.SMS_RECEIVED");
+		this.registerReceiver(new TestReceiver(), filter);*/
 	}
 	class MyThread implements Runnable {
 		@Override
@@ -71,9 +75,13 @@ public class ListNodePrepare {
 		// TODO Auto-generated method stub
 //		Fragment_listNode.nodeList.remove(Fragment_listNode.nodeList.)
 		List<Map<String, Object>> nodes = Fragment_listNode.getNodes();
-		for(int i = 0; i<nodes.size(); i++) {
-			if(nodes.get(i).get("源节点编号").equals(nodeId)){
-				nodes.remove(i);
+		List<Map<String, Object>> tempNodes = new ArrayList<Map<String, Object>>();
+		for(int i=0; i<nodes.size(); i++) {
+			tempNodes.add(nodes.get(i));
+		}
+		for(int i = 0; i<tempNodes.size(); i++) {
+			if(tempNodes.get(i).get("源节点编号").equals(nodeId)){
+				tempNodes.remove(i);
 				break;
 			}
 		}
@@ -83,8 +91,12 @@ public class ListNodePrepare {
 //		System.out.println("加入节点："+nodeId);
 		computeTheNodePower(nodeId, item);
 		// item.put("节点电压", "11");
-		nodes.add(item);
-		Collections.sort(nodes, new MyComparator());
+		tempNodes.add(item);
+		Collections.sort(tempNodes, new MyComparator());
+		nodes.clear();
+		for(int i=0; i<tempNodes.size(); i++) {
+			nodes.add(tempNodes.get(i));
+		}
 	}
 	private class MyComparator implements Comparator<Object> {
 
@@ -294,5 +306,7 @@ public class ListNodePrepare {
 		}
 		return powerDeci;
 	}
-
+	private void formNodeStructureTree(String nodeId) {
+		
+	}
 }
