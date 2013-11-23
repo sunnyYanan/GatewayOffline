@@ -32,12 +32,12 @@ public class ListNodePrepare {
 		listNodeThread.start();
 	}
 
-	public synchronized void prepare(String nodeId,String message, String type) {
+	public synchronized void prepare(String nodeId, String message, String type) {
 		changed = false;
 		db = MainActivity.mDbhelper.getReadableDatabase();
 		addNodeIntoList(nodeId);
 		changed = true;
-		if(type.equals("C1"))
+		if (type.equals("C1"))
 			formNodeStructureTree(nodeId, message);
 		/*
 		 * IntentFilter filter = new IntentFilter();
@@ -325,9 +325,12 @@ public class ListNodePrepare {
 		}
 		return powerDeci;
 	}
-	public void formNodeStructureTree(String nodeId,String message) {
+
+	public void formNodeStructureTree(String nodeId, String message) {
 		List<String> path = new ArrayList<String>();
-		path.add(nodeId);
+		if (!nodeId.equals("0000"))
+			path.add(nodeId);
+
 		try {
 			// 解析后的数据
 			PackagePattern mpp = MainActivity.xmlTelosbPackagePatternUtil
@@ -339,17 +342,19 @@ public class ListNodePrepare {
 			e.printStackTrace();
 		}
 	}
+
 	public void formNodeStructureTree() {
 		db = MainActivity.mDbhelper.getReadableDatabase();
 		Cursor cursor = db.query(MySQLiteDbHelper.TABLEMESSAGE, new String[] {
 				"message", "NodeID" }, "CType=?", new String[] { "C1" }, null,
 				null, "receivetime DESC");
-		// int num = 2;
+//		int num = 58;
 		while (cursor.moveToNext()) {
 			String message = cursor.getString(cursor.getColumnIndex("message"));
 			String curNode = cursor.getString(cursor.getColumnIndex("NodeID"));
 			List<String> path = new ArrayList<String>();
-			path.add(curNode);
+			if (!curNode.equals("0000"))
+				path.add(curNode);
 			try {
 				// 解析后的数据
 				PackagePattern mpp = MainActivity.xmlTelosbPackagePatternUtil
@@ -363,7 +368,7 @@ public class ListNodePrepare {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// num--;
+//			num--;
 		}
 
 	}
@@ -393,7 +398,7 @@ public class ListNodePrepare {
 	// 当前节点是合法节点，即无异常
 	private boolean isValid(String str) {
 		// TODO Auto-generated method stub
-		if(Fragment_listNode.nodeId.contains(str))
+		if (Fragment_listNode.nodeId.contains(str))
 			return true;
 		return false;
 	}

@@ -51,7 +51,7 @@ public class NodeTree {
 	}
 
 
-	private TreeNode findNodeParentByName(String curNodeName) {
+	public TreeNode findNodeParentByName(String curNodeName) {
 		// TODO Auto-generated method stub
 		return this.findNodeParentByName(curNodeName, root);
 	}
