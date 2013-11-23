@@ -36,9 +36,9 @@ public class ListNodePrepare {
 		changed = false;
 		db = MainActivity.mDbhelper.getReadableDatabase();
 		addNodeIntoList(nodeId);
-		changed = true;
 		if (type.equals("C1"))
 			formNodeStructureTree(nodeId, message);
+		changed = true;
 		/*
 		 * IntentFilter filter = new IntentFilter();
 		 * filter.addAction("android.provider.Telephony.SMS_RECEIVED");

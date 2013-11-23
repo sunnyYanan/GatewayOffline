@@ -85,6 +85,7 @@ public class topoStructureView extends View {
 		int num = list.size();
 		float wInterval = screenW / (num + 1);
 		float hInterval = 70;
+		int startPos = 0;//当当前行节点ID有重复时避免路线有误的措施
 
 		List<String> nodeNamePositionTemp = new ArrayList<String>();
 		List<float[]> nodePositionTemp = new ArrayList<float[]>();
@@ -118,9 +119,10 @@ public class topoStructureView extends View {
 				String parentName = nodeTree.findNodeParentByName(nodeName)
 						.getNode().getName();
 				System.out.println(nodeName + "的爸爸是" + parentName);
-				for (int j = 0; j < nodePositionTemp.size(); j++) {
+				for (int j = startPos; j < nodePositionTemp.size(); j++) {
 					if (nodeNamePositionTemp.get(j).equals(parentName)) {
 						float[] parent = new float[2];
+						startPos = j;
 						parent = nodePositionTemp.get(j);
 						canvas.drawLine(left + leftOffset, top, parent[0],
 								parent[1], linePaint);
