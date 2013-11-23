@@ -29,7 +29,7 @@ public class topoStructureView extends View {
 	private Paint textPaint = new Paint();// 文字
 	private float screenW, screenH;
 	private NodeTree nodeTree = ListNodePrepare.nodeTree;
-	private List<Map<TreeNode, float[]>> nodePosition;
+	private List<Map<String, float[]>> nodePosition;
 
 	@SuppressLint("DrawAllocation")
 	@Override
@@ -40,7 +40,7 @@ public class topoStructureView extends View {
 
 		screenW = this.getWidth();
 		screenH = this.getHeight();
-		nodePosition = new ArrayList<Map<TreeNode, float[]>>();
+		nodePosition = new ArrayList<Map<String, float[]>>();
 
 		if (nodeTree == null) {
 			System.out.println("empty tree");
@@ -84,8 +84,10 @@ public class topoStructureView extends View {
 		float wInterval = screenW / (num + 1);
 		float hInterval = 70;
 
+		// Map<String, float[]> position;
 		float[] temp = new float[2];
 		for (int i = 0; i < num; i++) {
+			// position = new HashMap<String, float[]>();
 			String nodeName = list.get(i).getNode().getName();
 
 			float left = (i + 1) * wInterval - leftOffset;
@@ -94,26 +96,27 @@ public class topoStructureView extends View {
 			canvas.drawText(nodeName, left + leftOffset, top + bmp.getHeight()
 					+ 9, textPaint);
 			// 找到父节点的坐标
+			float[] parent = null;
 			if (!nodeName.equals("0000")) {
-				TreeNode parent = nodeTree.findNodeParentByName(nodeName);
+				String parentName = nodeTree.findNodeParentByName(nodeName)
+						.getNode().getName();
 				for (int j = 0; j < nodePosition.size(); j++) {
-					if (nodePosition.get(j).containsKey(parent)) {
-						float[] parentPosition = new float[2];
-						parentPosition = nodePosition.get(j).get(parent);
-						canvas.drawLine(left + leftOffset, top, parentPosition[0],
-								parentPosition[1], linePaint);
+					if (nodePosition.get(j).containsKey(parentName)) {
+						parent = new float[2];
+						parent = nodePosition.get(j).get(parentName);
 						break;
 					}
 				}
-				//
+				// canvas.drawLine(left+leftOffset, top, parent[0], parent[1],
+				// linePaint);
 			}
 
 			temp[0] = left + leftOffset;// 横坐标
 			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
 
-			Map<TreeNode, float[]> position = new HashMap<TreeNode, float[]>();
-			position.put( list.get(i), temp);
-			nodePosition.add(position);
+			// position = new HashMap<String, float[]>();
+			// position.put(nodeName, temp);
+			// nodePosition.add(position);
 		}
 
 	}
