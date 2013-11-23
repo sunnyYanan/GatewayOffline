@@ -79,7 +79,7 @@ public class Fragment_statusValueCheck extends Fragment {
 		curNodeId = "0000";
 		curShowType = TEMPERATURE;// 传感器采样湿度，光照强度，二氧化碳浓度
 		statusView.setTitle("温度", "时间", "度数");
-		number = 2;
+		number = 3;
 
 		mdbHelper = new MySQLiteDbHelper(this.getActivity());
 

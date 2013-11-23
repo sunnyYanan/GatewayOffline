@@ -282,6 +282,10 @@ public class MainActivity extends FragmentActivity {
 		mp = new MediaPlayer();
 		// 准备节点信息
 		listNodePrepare.prepare();
+	/*	//节点逻辑结构树形成
+		listNodePrepare.formNodeStructureTree();
+		System.out.println("节点逻辑结构树");
+		System.out.println(listNodePrepare.getNodeTree().iteratorTree(listNodePrepare.getNodeTree().getTreeNode()));*/
 		// 监听预警音乐是否播放
 		Runnable runnable = new Runnable() {
 			@Override

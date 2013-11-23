@@ -15,7 +15,7 @@
     <string name="humidity">湿度</string>
     <string name="light">光照</string>
     <string name="co2">co2</string>
-    <string name="statusDateSet">时间查询</string>
+    <string name="statusDateSet">按时间查询</string>
     <string name="nodeSelectIns">节点选择：</string>
     <string name="itemNum">显示最近：</string>
     <string name="granularity">显示粒度：</string>

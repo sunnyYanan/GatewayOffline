@@ -9,7 +9,7 @@ public class MySQLiteDbHelper extends SQLiteOpenHelper {
 	public static String DBNAME ="MyData.db";
 	public static int VERSION = 1;
 	public static String TABLEMESSAGE = "Telosb";
-	public static String TABLESERVER = "Server";
+//	public static String TABLESERVER = "Server";
 	public static String TABLEALERTSETTING = "AlertSetting";
 	public MySQLiteDbHelper(Context context, String name,
 			CursorFactory factory, int version) {
