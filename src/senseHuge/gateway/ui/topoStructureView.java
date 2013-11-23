@@ -29,7 +29,8 @@ public class topoStructureView extends View {
 	private Paint textPaint = new Paint();// 文字
 	private float screenW, screenH;
 	private NodeTree nodeTree = ListNodePrepare.nodeTree;
-	private List<Map<String, float[]>> nodePosition;
+	private List<String> nodeNamePosition;
+	private List<float[]> nodePosition;
 
 	@SuppressLint("DrawAllocation")
 	@Override
@@ -40,7 +41,8 @@ public class topoStructureView extends View {
 
 		screenW = this.getWidth();
 		screenH = this.getHeight();
-		nodePosition = new ArrayList<Map<String, float[]>>();
+		nodePosition = new ArrayList<float[]>();
+		nodeNamePosition = new ArrayList<String>();
 
 		if (nodeTree == null) {
 			System.out.println("empty tree");
@@ -84,8 +86,16 @@ public class topoStructureView extends View {
 		float wInterval = screenW / (num + 1);
 		float hInterval = 70;
 
+		List<String> nodeNamePositionTemp = new ArrayList<String>();
+		List<float[]> nodePositionTemp = new ArrayList<float[]>();
+		for (int i = 0; i < nodePosition.size(); i++) {
+			nodeNamePositionTemp.add(nodeNamePosition.get(i));
+			nodePositionTemp.add(nodePosition.get(i));
+		}
+		nodeNamePosition.clear();
+		nodePosition.clear();
 		// Map<String, float[]> position;
-		float[] temp = new float[2];
+
 		for (int i = 0; i < num; i++) {
 			// position = new HashMap<String, float[]>();
 			String nodeName = list.get(i).getNode().getName();
@@ -95,28 +105,30 @@ public class topoStructureView extends View {
 			canvas.drawBitmap(bmp, left, top, null);
 			canvas.drawText(nodeName, left + leftOffset, top + bmp.getHeight()
 					+ 9, textPaint);
+			
+			float[] temp = new float[2];
+			temp[0] = left + leftOffset;// 横坐标
+			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
+			System.out.println(nodeName + "坐标是：" + temp[0] + " " + temp[1]);
+			nodeNamePosition.add(nodeName);
+			nodePosition.add(temp);
+
 			// 找到父节点的坐标
-			float[] parent = null;
 			if (!nodeName.equals("0000")) {
 				String parentName = nodeTree.findNodeParentByName(nodeName)
 						.getNode().getName();
-				for (int j = 0; j < nodePosition.size(); j++) {
-					if (nodePosition.get(j).containsKey(parentName)) {
-						parent = new float[2];
-						parent = nodePosition.get(j).get(parentName);
+				System.out.println(nodeName + "的爸爸是" + parentName);
+				for (int j = 0; j < nodePositionTemp.size(); j++) {
+					if (nodeNamePositionTemp.get(j).equals(parentName)) {
+						float[] parent = new float[2];
+						parent = nodePositionTemp.get(j);
+						canvas.drawLine(left + leftOffset, top, parent[0],
+								parent[1], linePaint);
 						break;
 					}
 				}
-				// canvas.drawLine(left+leftOffset, top, parent[0], parent[1],
-				// linePaint);
+
 			}
-
-			temp[0] = left + leftOffset;// 横坐标
-			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
-
-			// position = new HashMap<String, float[]>();
-			// position.put(nodeName, temp);
-			// nodePosition.add(position);
 		}
 
 	}
