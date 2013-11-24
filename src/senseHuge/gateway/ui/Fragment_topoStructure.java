@@ -1,8 +1,6 @@
 package senseHuge.gateway.ui;
 
 import senseHuge.gateway.service.ListNodePrepare;
-import senseHuge.gateway.ui.Fragment_listNode.MyThread;
-
 import com.example.testgateway.R;
 
 import android.os.Bundle;

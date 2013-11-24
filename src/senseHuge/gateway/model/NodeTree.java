@@ -84,7 +84,7 @@ public class NodeTree {
 		// TODO Auto-generated method stub
 		for (TreeNode index : current.getChildTree()) {
 
-			if (index.getNode().getName() == curNodeName) {
+			if (index.getNode().getName()==(curNodeName)) {
 				return index;
 			}
 
