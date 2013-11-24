@@ -5,8 +5,6 @@ import java.util.List;
 
 public class NodeTree {
 	private TreeNode root;
-	public static List<String> curPath = new ArrayList<String>();
-	
 
 	public NodeTree() {
 		root = new TreeNode();
@@ -14,14 +12,10 @@ public class NodeTree {
 	}
 
 	public void insert(List<String> path) {
-		curPath.clear();
-		List<String> temp = new ArrayList<String>();
 		TreeNode currentNode = root;
 		TreeNode backup;
 		for (int i = path.size() - 1; i >= 0; i--) {
-			temp.add(path.get(i));
 			String curNodeName = path.get(i);
-			System.out.println("µ±«∞≤Â»Î£∫"+curNodeName);
 			backup = currentNode.findChildByName(curNodeName);
 			if (backup != null) {
 				currentNode = backup;
@@ -53,9 +47,6 @@ public class NodeTree {
 			
 			}
 		
-		}
-		for(int i=0; i<temp.size(); i++) {
-			curPath.add(temp.get(i));
 		}
 	}
 
