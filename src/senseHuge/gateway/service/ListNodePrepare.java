@@ -348,7 +348,7 @@ public class ListNodePrepare {
 		Cursor cursor = db.query(MySQLiteDbHelper.TABLEMESSAGE, new String[] {
 				"message", "NodeID" }, "CType=?", new String[] { "C1" }, null,
 				null, "receivetime DESC");
-//		int num = 58;
+		// int num = 58;
 		while (cursor.moveToNext()) {
 			String message = cursor.getString(cursor.getColumnIndex("message"));
 			String curNode = cursor.getString(cursor.getColumnIndex("NodeID"));
@@ -368,8 +368,9 @@ public class ListNodePrepare {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			num--;
+			// num--;
 		}
+		cursor.close();
 
 	}
 
@@ -393,6 +394,40 @@ public class ListNodePrepare {
 				break;
 			}
 		}
+		int half = (path.size() - 1) / 2;// 4
+		int pos = repeatPos(path, half);
+		if(pos!=0)
+			removeRepeat(path, pos);
+	}
+
+	private void removeRepeat(List<String> path, int pos) {
+		// TODO Auto-generated method stub
+		List<String> temp = new ArrayList<String>();
+		for(int i = 0; i<=pos; i++) {
+			temp.add(path.get(i));
+		}
+		path.clear();
+		for(int i=0; i<temp.size(); i++) {
+			path.add(temp.get(i));
+		}
+	}
+
+	private int repeatPos(List<String> path, int pos) {
+		// TODO Auto-generated method stub
+		// boolean flag = true;
+		// while (flag) {
+		int num = pos;
+		if(pos == 0) {
+			return 0;
+		}
+		for (int i = 1; i <= pos; i++) {
+			if (!path.get(i).equals(path.get(i + pos))) {
+				num = repeatPos(path, --pos);
+				break;
+			}
+		}
+		return num;
+		// }
 	}
 
 	// 当前节点是合法节点，即无异常

@@ -27,10 +27,15 @@ import com.example.testgateway.R;
 public class topoStructureView extends View {
 	private Paint linePaint = new Paint();// 节点连线
 	private Paint textPaint = new Paint();// 文字
+	private Paint circlePaint = new Paint();// 包
 	private float screenW, screenH;
 	private NodeTree nodeTree = ListNodePrepare.nodeTree;
 	private List<String> nodeNamePosition;
+	private List<String> nodeNamePositionAll;
 	private List<float[]> nodePosition;
+	private List<float[]> nodePositionAll;
+	
+	float cx = 0, cy = 0;
 
 	@SuppressLint("DrawAllocation")
 	@Override
@@ -42,7 +47,9 @@ public class topoStructureView extends View {
 		screenW = this.getWidth();
 		screenH = this.getHeight();
 		nodePosition = new ArrayList<float[]>();
+		nodePositionAll = new ArrayList<float[]>();
 		nodeNamePosition = new ArrayList<String>();
+		nodeNamePositionAll = new ArrayList<String>();
 
 		if (nodeTree == null) {
 			System.out.println("empty tree");
@@ -70,8 +77,12 @@ public class topoStructureView extends View {
 			}
 			layer++;
 		}
+		//包
+		canvas.drawCircle(cx, cy, 4, circlePaint);
+		
 	}
 
+	// 一层一层的画节点以及节点结构
 	private void draw(List<TreeNode> list, int layer, Canvas canvas) {
 		// TODO Auto-generated method stub
 		Resources res = getResources();
@@ -85,7 +96,7 @@ public class topoStructureView extends View {
 		int num = list.size();
 		float wInterval = screenW / (num + 1);
 		float hInterval = 70;
-		int startPos = 0;//当当前行节点ID有重复时避免路线有误的措施
+		int startPos = 0;// 当当前行节点ID有重复时避免路线有误的措施
 
 		List<String> nodeNamePositionTemp = new ArrayList<String>();
 		List<float[]> nodePositionTemp = new ArrayList<float[]>();
@@ -106,19 +117,19 @@ public class topoStructureView extends View {
 			canvas.drawBitmap(bmp, left, top, null);
 			canvas.drawText(nodeName, left + leftOffset, top + bmp.getHeight()
 					+ 9, textPaint);
-			
+
 			float[] temp = new float[2];
 			temp[0] = left + leftOffset;// 横坐标
 			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
-			System.out.println(nodeName + "坐标是：" + temp[0] + " " + temp[1]);
 			nodeNamePosition.add(nodeName);
+			nodeNamePositionAll.add(nodeName);
 			nodePosition.add(temp);
+			nodePositionAll.add(temp);
 
 			// 找到父节点的坐标
 			if (!nodeName.equals("0000")) {
 				String parentName = nodeTree.findNodeParentByName(nodeName)
 						.getNode().getName();
-				System.out.println(nodeName + "的爸爸是" + parentName);
 				for (int j = startPos; j < nodePositionTemp.size(); j++) {
 					if (nodeNamePositionTemp.get(j).equals(parentName)) {
 						float[] parent = new float[2];
@@ -148,6 +159,11 @@ public class topoStructureView extends View {
 		textPaint.setAntiAlias(true);// 锯齿不显示
 		textPaint.setTextAlign(Align.CENTER);
 		textPaint.setTextSize(15);
+
+		circlePaint.setStyle(Style.FILL);
+		circlePaint.setStrokeWidth(1);
+		circlePaint.setColor(Color.parseColor("#4692B1"));
+		circlePaint.setAntiAlias(true);
 	}
 
 	public topoStructureView(Context context) {
@@ -164,6 +180,22 @@ public class topoStructureView extends View {
 			int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		// TODO Auto-generated constructor stub
+	}
+
+	public List<String> getNodeNamePositionAll() {
+		return nodeNamePositionAll;
+	}
+
+	public void setNodeNamePositionAll(List<String> nodeNamePositionAll) {
+		this.nodeNamePositionAll = nodeNamePositionAll;
+	}
+
+	public List<float[]> getNodePositionAll() {
+		return nodePositionAll;
+	}
+
+	public void setNodePositionAll(List<float[]> nodePositionAll) {
+		this.nodePositionAll = nodePositionAll;
 	}
 
 }
