@@ -85,12 +85,14 @@ public class topoStructureView extends View {
 		int num = list.size();
 		float wInterval = screenW / (num + 1);
 		float hInterval = 70;
-		int startPos = 0;//当当前行节点ID有重复时避免路线有误的措施
+		int startPos = 0;// 当当前行节点ID有重复时避免路线有误的措施
 
+		System.out.println("第" + layer + "层");
 		List<String> nodeNamePositionTemp = new ArrayList<String>();
 		List<float[]> nodePositionTemp = new ArrayList<float[]>();
 		for (int i = 0; i < nodePosition.size(); i++) {
 			nodeNamePositionTemp.add(nodeNamePosition.get(i));
+			System.out.println(nodeNamePositionTemp.get(i));
 			nodePositionTemp.add(nodePosition.get(i));
 		}
 		nodeNamePosition.clear();
@@ -106,7 +108,7 @@ public class topoStructureView extends View {
 			canvas.drawBitmap(bmp, left, top, null);
 			canvas.drawText(nodeName, left + leftOffset, top + bmp.getHeight()
 					+ 9, textPaint);
-			
+
 			float[] temp = new float[2];
 			temp[0] = left + leftOffset;// 横坐标
 			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
@@ -122,7 +124,10 @@ public class topoStructureView extends View {
 				for (int j = startPos; j < nodePositionTemp.size(); j++) {
 					if (nodeNamePositionTemp.get(j).equals(parentName)) {
 						float[] parent = new float[2];
-						startPos = j;
+						if (j == nodePositionTemp.size() - 2)
+							startPos = nodePositionTemp.size() - 1;
+						else
+							startPos = j;
 						parent = nodePositionTemp.get(j);
 						canvas.drawLine(left + leftOffset, top, parent[0],
 								parent[1], linePaint);
