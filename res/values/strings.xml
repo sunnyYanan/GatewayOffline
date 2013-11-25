@@ -104,6 +104,10 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+    <string-array name="newAlertManulInput">
+        <item>值</item>
+        <item>%</item>
+    </string-array>
 
     <string name="title_activity_fragment_node_setting">Fragment_nodeSetting</string>
     <string name="title_activity_file_chooser">FileChooserActivity</string>

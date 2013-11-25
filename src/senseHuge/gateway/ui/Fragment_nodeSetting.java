@@ -8,8 +8,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -43,8 +42,16 @@ public class Fragment_nodeSetting extends Fragment {
 	RadioButton radioNoButton;
 	int alertPower = 15;// 预警值的设置
 	String alertMusicPath = "/mnt/1.mp3";// 预警音乐设置
+	int type = 1;// 1代表值，2代表百分比
 	MySQLiteDbHelper mdbHelper;
 	SQLiteDatabase db;
+	// 新增预警项目的控件
+	EditText alertManulInputName;
+	EditText alertManulValue;
+	Spinner alertManulSpinner;
+	Button newAlertClear;
+	Button addNewAlert;
+
 	View v;
 
 	private static final int REQUEST_CODE = 1; // 请求码
@@ -73,6 +80,12 @@ public class Fragment_nodeSetting extends Fragment {
 				.findViewById(R.id.powerSettingSpinner);
 		musicChooseButton = (Button) v.findViewById(R.id.musicSelect);
 		settingOkButton = (Button) v.findViewById(R.id.settingOKButton);
+		alertManulInputName = (EditText) v
+				.findViewById(R.id.alertManulInputName);
+		alertManulValue = (EditText) v.findViewById(R.id.alertManulValue);
+		alertManulSpinner = (Spinner) v.findViewById(R.id.alertManulSpinner);
+		newAlertClear = (Button) v.findViewById(R.id.newAlertClear);
+		addNewAlert = (Button) v.findViewById(R.id.addNewAlert);
 
 		ArrayAdapter<CharSequence> sendCycleAdapter = ArrayAdapter
 				.createFromResource(getActivity(), R.array.nodeSettingCycle,
@@ -86,15 +99,26 @@ public class Fragment_nodeSetting extends Fragment {
 		powerSettingAdapter
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
+		ArrayAdapter<CharSequence> newAlertAdapter = ArrayAdapter
+				.createFromResource(getActivity(), R.array.newAlertManulInput,
+						android.R.layout.simple_spinner_item);
+		newAlertAdapter
+				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		sendCycleSpinner.setAdapter(sendCycleAdapter);
 		powerSettingSpinner.setAdapter(powerSettingAdapter);
+		alertManulSpinner.setAdapter(newAlertAdapter);
 
 		sendCycleSpinner
 				.setOnItemSelectedListener(new SendCycleSelectedListener());
 		powerSettingSpinner
 				.setOnItemSelectedListener(new PowerSettingListener());
+		alertManulSpinner.setOnItemSelectedListener(new AlertManulListener());
+
 		musicChooseButton.setOnClickListener(new MyButtonListener());
 		settingOkButton.setOnClickListener(new MyButtonListener());
+
+		newAlertClear.setOnClickListener(new MyButtonListener());
+		addNewAlert.setOnClickListener(new MyButtonListener());
 		rg.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
 		return v;
 	}
@@ -131,9 +155,39 @@ public class Fragment_nodeSetting extends Fragment {
 						.show();
 
 				break;
+			case R.id.newAlertClear:
+				alertManulInputName.setText("");
+				alertManulValue.setText("");
+				break;
+			case R.id.addNewAlert:
+				// 待加入
+				if (alertManulInputName.getText().toString().equals("")
+						|| alertManulValue.getText().toString().equals(""))
+					toast("请输入值");
+				else {
+					writeNewAlertIntoDb();
+					toast("添加成功");
+				}
+
+				break;
 			}
 		}
 
+	}
+
+	private void writeNewAlertIntoDb() {
+		// TODO Auto-generated method stub
+		db = mdbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("type", alertManulInputName.getText().toString());
+		values.put("path", alertMusicPath);
+		values.put("alert", isMusicAlert);
+		if(type==1) {
+			values.put("value", alertManulValue.getText().toString());
+		}else if(type == 2) {
+			values.put("value", alertManulValue.getText().toString() + "%");
+		}
+		db.insert(MySQLiteDbHelper.TABLEALERTSETTING, null, values);
 	}
 
 	// 将预警设置写入数据库
@@ -147,7 +201,7 @@ public class Fragment_nodeSetting extends Fragment {
 		values.put("path", alertMusicPath);
 		values.put("alert", isMusicAlert);
 
-		if (checkIfHas()) {
+		if (checkIfHas("预警电量")) {
 			db.update("AlertSetting", values, "type=?", new String[] { "预警电量" });
 		} else {
 			db.insert("AlertSetting", null, values);
@@ -156,13 +210,13 @@ public class Fragment_nodeSetting extends Fragment {
 	}
 
 	// 检查数据库中是否已经有该类型
-	private boolean checkIfHas() {
+	private boolean checkIfHas(String type) {
 		// TODO Auto-generated method stub
 		Cursor cursor = db.query("AlertSetting", new String[] { "type" }, null,
 				null, null, null, null);
 		while (cursor.moveToNext()) {
-			String type = (cursor.getString(cursor.getColumnIndex("type")));
-			if (type.equalsIgnoreCase("预警电量")) {
+			String typeTemp = (cursor.getString(cursor.getColumnIndex("type")));
+			if (typeTemp.equalsIgnoreCase(type)) {
 				cursor.close();
 				return true;
 			}
@@ -232,6 +286,33 @@ public class Fragment_nodeSetting extends Fragment {
 
 		}
 
+	}
+
+	public class AlertManulListener implements OnItemSelectedListener {
+		@Override
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			System.out.println("AlertManulListenerpos---->" + arg2);
+			setAlertManulType(arg2);
+			System.out.println("AlertManulListenerValue---->" + type);
+
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	private void setAlertManulType(int arg2) {
+		// TODO Auto-generated method stub
+		if (arg2 == 0)
+			type = 1;
+		else if (arg2 == 1)
+			type = 2;
 	}
 
 	/**
