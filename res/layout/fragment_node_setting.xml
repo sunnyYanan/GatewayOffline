@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/sinkSettingShow"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="80dp" >
+        android:layout_marginTop="20dp" >
 
         <TextView
             android:id="@+id/sendCycleTitle"
@@ -44,16 +44,6 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/sendCycleItem" />
-
-        <!--
-             <Button
-            android:id="@+id/sendCycleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/sendCycleSelect"
-            android:layout_toRightOf="@id/sendCycleSelect"
-            android:text="@string/settingOK" />
-        -->
     </RelativeLayout>
 
     <RelativeLayout
@@ -71,20 +61,11 @@
             android:text="@string/alertSettingTitle"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/alertSettingItemTitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/alertSettingTitle"
-            android:text="@string/alertSettingItemTitle1"
-            android:textSize="20sp" />
-
         <LinearLayout
             android:id="@+id/powerSettingItem1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_toRightOf="@id/alertSettingItemTitle1"
+            android:layout_toRightOf="@id/alertSettingTitle"
             android:orientation="horizontal" >
 
             <TextView
@@ -99,13 +80,96 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/powerSettingItem2"
-            android:layout_width="fill_parent"
+        <RelativeLayout
+            android:id="@+id/addNewAlertShow"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/powerSettingItem1"
-            android:layout_marginLeft="50dp"
-            android:layout_toRightOf="@id/alertSettingItemTitle1"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/alertSettingTitle" >
+
+            <TextView
+                android:id="@+id/addNewAlertTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:text="@string/newAlertItem"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/alertManulInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/addNewAlertTitle"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alertManulInputName"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/alertManulInputName"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/alertManulInputValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/alertManulInput"
+                android:layout_toRightOf="@id/addNewAlertTitle"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alertManulInputValue"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/alertManulValue"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+                <Spinner
+                    android:id="@+id/alertManulSpinner"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/alertManulInputValue"
+                android:layout_toRightOf="@id/addNewAlertTitle" >
+
+                <Button
+                    android:id="@+id/newAlertClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reset" />
+
+                <Button
+                    android:id="@+id/addNewAlert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addNewAlert" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ifAlertMusic"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addNewAlertShow"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/alertSettingTitle"
             android:orientation="horizontal" >
 
             <TextView
@@ -136,12 +200,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/powerSettingItem3"
+            android:id="@+id/alertMuicPath"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/powerSettingItem2"
-            android:layout_marginLeft="50dp"
-            android:layout_toRightOf="@id/alertSettingItemTitle1"
+            android:layout_below="@id/ifAlertMusic"
+            android:layout_toRightOf="@id/alertSettingTitle"
             android:orientation="horizontal" >
 
             <TextView
@@ -158,37 +221,13 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <!--
-    <LinearLayout
-        android:id="@+id/musicSetting"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/powerSetting"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="@string/musicSetting"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/musicSelect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/musicSelect" />
-    </LinearLayout>
-    -->
-
     <Button
         android:id="@+id/settingOKButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="200dp"
+        android:layout_marginRight="100dp"
         android:text="@string/settingOK" >
     </Button>
 
