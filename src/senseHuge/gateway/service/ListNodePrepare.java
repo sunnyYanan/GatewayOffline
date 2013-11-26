@@ -36,8 +36,10 @@ public class ListNodePrepare {
 		changed = false;
 		db = MainActivity.mDbhelper.getReadableDatabase();
 		addNodeIntoList(nodeId);
-		if (type.equals("C1"))
+		if (type.equals("C1")) {
 			formNodeStructureTree(nodeId, message);
+			findIfTrige(nodeId, message);
+		}
 		changed = true;
 		// findIfTriger(nodeId);// 当前收到的节点数据是否超出数据库中预警设置
 		/*
@@ -45,6 +47,43 @@ public class ListNodePrepare {
 		 * filter.addAction("android.provider.Telephony.SMS_RECEIVED");
 		 * this.registerReceiver(new TestReceiver(), filter);
 		 */
+	}
+
+	private void findIfTrige(String nodeId, String message) {
+		// TODO Auto-generated method stub
+		Cursor cursor = db.query(MySQLiteDbHelper.TABLEALERTSETTING,
+				new String[] { "type" }, null, null, null, null, null);
+		PackagePattern mpp = null;
+		// 解析后的数据
+		try {
+			mpp = MainActivity.xmlTelosbPackagePatternUtil
+					.parseTelosbPackage(message);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		while (cursor.moveToNext()) {
+			String alertType = cursor.getString(cursor.getColumnIndex("type"));
+			float alertTypeValue = findTheAlertTypeValue(alertType, mpp);
+			if(alertTypeValue!=0) {
+				trigerTheAlert(alertTypeValue,alertType);
+			}
+		}
+		cursor.close();
+	}
+
+	private float findTheAlertTypeValue(String alertType, PackagePattern mpp) {
+		// TODO Auto-generated method stub
+		float value = 0;
+		Iterator<?> it = mpp.DataField.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry) it.next();
+			if (pairs.getKey().equals(alertType)) {
+				return Float.parseFloat(pairs.getValue().toString());
+			}
+		}
+		return value;
 	}
 
 	class MyThread implements Runnable {
@@ -205,7 +244,7 @@ public class ListNodePrepare {
 
 		String trige = findIfTriger("预警电量");
 		if (trige != null && b != 0 && trige.equals("1")) {
-			TrigerTheAlert(b, "预警电量");
+			trigerTheAlert(b, "预警电量");
 		}
 		return b;
 	}
@@ -224,7 +263,7 @@ public class ListNodePrepare {
 		return alert;
 	}
 
-	private void TrigerTheAlert(float b, String type) {
+	private void trigerTheAlert(float b, String type) {
 		// TODO Auto-generated method stub
 		String alert = findTheAlertValueSetting(type);
 		// 处理数据
@@ -237,7 +276,7 @@ public class ListNodePrepare {
 				float value = Float.parseFloat(valueStr);
 				if (type.equals("预警电量")) {
 					if (b / 2.5 <= (value / 100)) {
-						System.out.println("比值:" + b / 2.5);
+						System.out.println("电量比值:" + b / 2.5);
 						// 播放音乐
 						String musicPath = findTheAlertMusicPath(type);
 						System.out.println("musicPath " + musicPath);
@@ -246,8 +285,11 @@ public class ListNodePrepare {
 				}
 			} else {
 				// 设置的是值，待写
-
-				
+				if(b<Float.parseFloat(alert)) {//当前值小于预警值
+					String musicPath = findTheAlertMusicPath(type);
+					System.out.println("musicPath " + musicPath);
+					playAlertMusic(musicPath);
+				}
 			}
 
 		}
