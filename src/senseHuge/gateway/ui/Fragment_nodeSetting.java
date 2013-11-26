@@ -42,13 +42,13 @@ public class Fragment_nodeSetting extends Fragment {
 	RadioButton radioNoButton;
 	int alertPower = 15;// 预警值的设置
 	String alertMusicPath = "/mnt/1.mp3";// 预警音乐设置
-	int type = 1;// 1代表值，2代表百分比
+//	int type = 1;// 1代表值，2代表百分比
 	MySQLiteDbHelper mdbHelper;
 	SQLiteDatabase db;
 	// 新增预警项目的控件
 	EditText alertManulInputName;
 	EditText alertManulValue;
-	Spinner alertManulSpinner;
+	// Spinner alertManulSpinner;
 	Button newAlertClear;
 	Button addNewAlert;
 
@@ -83,7 +83,7 @@ public class Fragment_nodeSetting extends Fragment {
 		alertManulInputName = (EditText) v
 				.findViewById(R.id.alertManulInputName);
 		alertManulValue = (EditText) v.findViewById(R.id.alertManulValue);
-		alertManulSpinner = (Spinner) v.findViewById(R.id.alertManulSpinner);
+		// alertManulSpinner = (Spinner) v.findViewById(R.id.alertManulSpinner);
 		newAlertClear = (Button) v.findViewById(R.id.newAlertClear);
 		addNewAlert = (Button) v.findViewById(R.id.addNewAlert);
 
@@ -106,13 +106,14 @@ public class Fragment_nodeSetting extends Fragment {
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		sendCycleSpinner.setAdapter(sendCycleAdapter);
 		powerSettingSpinner.setAdapter(powerSettingAdapter);
-		alertManulSpinner.setAdapter(newAlertAdapter);
+		// alertManulSpinner.setAdapter(newAlertAdapter);
 
 		sendCycleSpinner
 				.setOnItemSelectedListener(new SendCycleSelectedListener());
 		powerSettingSpinner
 				.setOnItemSelectedListener(new PowerSettingListener());
-		alertManulSpinner.setOnItemSelectedListener(new AlertManulListener());
+		// alertManulSpinner.setOnItemSelectedListener(new
+		// AlertManulListener());
 
 		musicChooseButton.setOnClickListener(new MyButtonListener());
 		settingOkButton.setOnClickListener(new MyButtonListener());
@@ -150,7 +151,7 @@ public class Fragment_nodeSetting extends Fragment {
 				break;
 			case R.id.settingOKButton:
 				writeIntoNode();
-				saveIntoDB();
+				saveIntoDB("预警电量",alertPower+"%");
 				Toast.makeText(v.getContext(), "设置成功", Toast.LENGTH_SHORT)
 						.show();
 
@@ -165,7 +166,7 @@ public class Fragment_nodeSetting extends Fragment {
 						|| alertManulValue.getText().toString().equals(""))
 					toast("请输入值");
 				else {
-					writeNewAlertIntoDb();
+					saveIntoDB(alertManulInputName.getText().toString(),alertManulValue.getText().toString());
 					toast("添加成功");
 				}
 
@@ -175,36 +176,42 @@ public class Fragment_nodeSetting extends Fragment {
 
 	}
 
-	private void writeNewAlertIntoDb() {
+	/*private void writeNewAlertIntoDb() {
 		// TODO Auto-generated method stub
 		db = mdbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("type", alertManulInputName.getText().toString());
 		values.put("path", alertMusicPath);
 		values.put("alert", isMusicAlert);
-		if(type==1) {
-			values.put("value", alertManulValue.getText().toString());
-		}else if(type == 2) {
-			values.put("value", alertManulValue.getText().toString() + "%");
+		// if(type==1) {
+		values.put("value", alertManulValue.getText().toString());
+		// }else if(type == 2) {
+		// values.put("value", alertManulValue.getText().toString() + "%");
+		// }
+		if (checkIfHas(alertManulInputName.getText().toString())) {
+			db.update(MySQLiteDbHelper.TABLEALERTSETTING, values, "type=?",
+					new String[] { alertManulInputName.getText().toString() });
+		} else {
+			db.insert(MySQLiteDbHelper.TABLEALERTSETTING, null, values);
 		}
-		db.insert(MySQLiteDbHelper.TABLEALERTSETTING, null, values);
-	}
+		db.close();
+	}*/
 
 	// 将预警设置写入数据库
-	private void saveIntoDB() {
+	private void saveIntoDB(String type, String value) {
 		// TODO Auto-generated method stub
 		db = mdbHelper.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put("type", "预警电量");
-		values.put("value", alertPower + "%");
+		values.put("type", type);
+		values.put("value", value);
 		values.put("path", alertMusicPath);
 		values.put("alert", isMusicAlert);
 
-		if (checkIfHas("预警电量")) {
-			db.update("AlertSetting", values, "type=?", new String[] { "预警电量" });
+		if (checkIfHas(type)) {
+			db.update(MySQLiteDbHelper.TABLEALERTSETTING, values, "type=?", new String[] { type });
 		} else {
-			db.insert("AlertSetting", null, values);
+			db.insert(MySQLiteDbHelper.TABLEALERTSETTING, null, values);
 		}
 		db.close();
 	}
@@ -288,32 +295,32 @@ public class Fragment_nodeSetting extends Fragment {
 
 	}
 
-	public class AlertManulListener implements OnItemSelectedListener {
-		@Override
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
-			System.out.println("AlertManulListenerpos---->" + arg2);
-			setAlertManulType(arg2);
-			System.out.println("AlertManulListenerValue---->" + type);
+	// public class AlertManulListener implements OnItemSelectedListener {
+	// @Override
+	// public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+	// long arg3) {
+	// // TODO Auto-generated method stub
+	// System.out.println("AlertManulListenerpos---->" + arg2);
+	// setAlertManulType(arg2);
+	// System.out.println("AlertManulListenerValue---->" + type);
+	//
+	// }
+	//
+	// @Override
+	// public void onNothingSelected(AdapterView<?> arg0) {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// }
 
-		}
-
-		@Override
-		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	private void setAlertManulType(int arg2) {
-		// TODO Auto-generated method stub
-		if (arg2 == 0)
-			type = 1;
-		else if (arg2 == 1)
-			type = 2;
-	}
+	// private void setAlertManulType(int arg2) {
+	// // TODO Auto-generated method stub
+	// if (arg2 == 0)
+	// type = 1;
+	// else if (arg2 == 1)
+	// type = 2;
+	// }
 
 	/**
 	 * @param arg2

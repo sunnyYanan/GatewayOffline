@@ -39,6 +39,7 @@ public class ListNodePrepare {
 		if (type.equals("C1"))
 			formNodeStructureTree(nodeId, message);
 		changed = true;
+		// findIfTriger(nodeId);// 当前收到的节点数据是否超出数据库中预警设置
 		/*
 		 * IntentFilter filter = new IntentFilter();
 		 * filter.addAction("android.provider.Telephony.SMS_RECEIVED");
@@ -111,6 +112,16 @@ public class ListNodePrepare {
 			nodes.add(tempNodes.get(i));
 		}
 	}
+
+	/*
+	 * private void ifTrigeTheAlert(String nodeId) { // TODO Auto-generated
+	 * method stub currentId = nodeId; Cursor alertCursor =
+	 * db.query(MySQLiteDbHelper.TABLEALERTSETTING, new String[] { "type" },
+	 * null, null, null, null, null); Cursor cursor =
+	 * db.query(MySQLiteDbHelper.TABLEMESSAGE, new String[] { "message" },
+	 * "NodeID=? AND CType=?", new String[] { nodeId, "C1" }, null, null,
+	 * "receivetime DESC"); }
+	 */
 
 	private class MyComparator implements Comparator<Object> {
 
@@ -188,22 +199,22 @@ public class ListNodePrepare {
 
 		}
 		float power = (float) (powerSum / num / 4096 * 2.5);
-		float b = (float) (Math.round(power * 1000)) / 1000;
+		float b = (float) (Math.round(power * 1000)) / 1000;// 当前节点最近4条数据的平均电量值
 		// (这里的100就是2位小数点,如果要其它位,如4位,这里两个100改成10000)
 		System.out.println("average power：" + b);
 
-		String trige = findIfPowerTriger();
+		String trige = findIfTriger("预警电量");
 		if (trige != null && b != 0 && trige.equals("1")) {
-			TrigerThePowerAlert(b);
+			TrigerTheAlert(b, "预警电量");
 		}
 		return b;
 	}
 
-	private String findIfPowerTriger() {
+	private String findIfTriger(String type) {
 		// TODO Auto-generated method stub
 		String alert = null;
 		Cursor cursor = db.query(MySQLiteDbHelper.TABLEALERTSETTING,
-				new String[] { "alert" }, "type=?", new String[] { "预警电量" },
+				new String[] { "alert" }, "type=?", new String[] { type },
 				null, null, null);
 		while (cursor.moveToNext()) {
 			// 由于写入的规则设定，此时其实只有1条数据
@@ -213,75 +224,89 @@ public class ListNodePrepare {
 		return alert;
 	}
 
-	private void TrigerThePowerAlert(float b) {
+	private void TrigerTheAlert(float b, String type) {
 		// TODO Auto-generated method stub
-		String alert = findTheAlertValueSetting();
+		String alert = findTheAlertValueSetting(type);
 		// 处理数据
 		if (alert != null) {
 			// 预警阈值
 			int pos = alert.indexOf("%");
-			String valueStr = alert.substring(0, pos);
-			float value = Float.parseFloat(valueStr);
-			if (b / 2.5 <= (value / 100)) {
-				System.out.println("比值:" + b / 2.5);
-				// 播放音乐
-				String musicPath = findTheAlertMusicPath();
-				System.out.println("musicPath " + musicPath);
-				try {
-					MainActivity.mp.setDataSource(musicPath);
-					MainActivity.mp.prepareAsync();
-					MainActivity.mp
-							.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-								@Override
-								public void onPrepared(MediaPlayer mp) {
-									// TODO Auto-generated method stub
-									mp.start();// 异步准备数据的方法，service是可以在用户与其他应用交互时仍运行，此时需要wake
-								}
-
-							});
-					MainActivity.mp
-							.setOnCompletionListener(new OnCompletionListener() {
-								@Override
-								public void onCompletion(MediaPlayer arg0) {
-									// TODO Auto-generated method stub
-									arg0.release();
-								}
-							});
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if (pos > 0) {
+				// 设置的是百分比值
+				String valueStr = alert.substring(0, pos);
+				float value = Float.parseFloat(valueStr);
+				if (type.equals("预警电量")) {
+					if (b / 2.5 <= (value / 100)) {
+						System.out.println("比值:" + b / 2.5);
+						// 播放音乐
+						String musicPath = findTheAlertMusicPath(type);
+						System.out.println("musicPath " + musicPath);
+						playAlertMusic(musicPath);
+					}
 				}
+			} else {
+				// 设置的是值，待写
 
+				
 			}
+
 		}
 	}
 
-	private String findTheAlertMusicPath() {
+	private void playAlertMusic(String musicPath) {
+		// TODO Auto-generated method stub
+		try {
+			MainActivity.mp.setDataSource(musicPath);
+			MainActivity.mp.prepareAsync();
+			MainActivity.mp
+					.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+						@Override
+						public void onPrepared(MediaPlayer mp) {
+							// TODO Auto-generated method stub
+							mp.start();// 异步准备数据的方法，service是可以在用户与其他应用交互时仍运行，此时需要wake
+						}
+
+					});
+			MainActivity.mp.setOnCompletionListener(new OnCompletionListener() {
+				@Override
+				public void onCompletion(MediaPlayer arg0) {
+					// TODO Auto-generated method stub
+					arg0.release();
+				}
+			});
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private String findTheAlertMusicPath(String type) {
 		// TODO Auto-generated method stub
 		String path = null;
 		Cursor cursor = db.query(MySQLiteDbHelper.TABLEALERTSETTING,
-				new String[] { "path" }, "type=?", new String[] { "预警电量" },
-				null, null, null);
+				new String[] { "path" }, "type=?", new String[] { type }, null,
+				null, null);
 		while (cursor.moveToNext())
 			path = cursor.getString(cursor.getColumnIndex("path"));
 		cursor.close();
 		return path;
 	}
 
-	private String findTheAlertValueSetting() {
+	private String findTheAlertValueSetting(String type) {
 		// TODO Auto-generated method stub
 		String alertSetting = null;
 		Cursor cursor = db.query(MySQLiteDbHelper.TABLEALERTSETTING,
-				new String[] { "value" }, "type=?", new String[] { "预警电量" },
+				new String[] { "value" }, "type=?", new String[] { type },
 				null, null, null);
 		while (cursor.moveToNext()) {
 			// 由于写入的规则设定，此时其实只有1条数据
@@ -402,11 +427,11 @@ public class ListNodePrepare {
 	private void removeRepeat(List<String> path, int num) {
 		// TODO Auto-generated method stub
 		List<String> temp = new ArrayList<String>();
-		for(int i= 0; i<=num; i++) {
+		for (int i = 0; i <= num; i++) {
 			temp.add(path.get(i));
 		}
 		path.clear();
-		for(int i=0; i<temp.size(); i++)
+		for (int i = 0; i < temp.size(); i++)
 			path.add(temp.get(i));
 	}
 
