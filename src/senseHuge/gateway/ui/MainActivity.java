@@ -1,5 +1,6 @@
 package senseHuge.gateway.ui;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,10 @@ import senseHuge.gateway.service.ListNodePrepare;
 import senseHuge.gateway.service.LocalConfigService;
 import senseHuge.gateway.util.OfflineBackupUtil;
 import senseHuge.gateway.util.XmlTelosbPackagePatternUtil;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -28,7 +32,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -80,12 +83,29 @@ public class MainActivity extends FragmentActivity {
 	Button topoStructure;
 	Button aboutUs;
 	Button quit;
+	
+	PendingIntent m_restartIntent;
+
+	private UncaughtExceptionHandler m_handler = new UncaughtExceptionHandler() {
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex) {
+			Log.d("wrong", "uncaught exception is catched!");
+			AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 3000,
+					m_restartIntent);
+			System.exit(2);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// fListNode = new Fragment_listNode();
+
+		Intent intent = getIntent();
+		m_restartIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+				intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		// 串口，服务器，节点监听事务
 		manager = getSupportFragmentManager();
@@ -127,6 +147,8 @@ public class MainActivity extends FragmentActivity {
 
 		init();
 		System.out.println("inited:");
+
+		Thread.setDefaultUncaughtExceptionHandler(m_handler);
 	}
 
 	class ButtonClickListener implements OnClickListener {
@@ -282,10 +304,12 @@ public class MainActivity extends FragmentActivity {
 		mp = new MediaPlayer();
 		// 准备节点信息
 		listNodePrepare.prepare();
-	/*	//节点逻辑结构树形成
-		listNodePrepare.formNodeStructureTree();
-		System.out.println("节点逻辑结构树");
-		System.out.println(listNodePrepare.getNodeTree().iteratorTree(listNodePrepare.getNodeTree().getTreeNode()));*/
+		/*
+		 * //节点逻辑结构树形成 listNodePrepare.formNodeStructureTree();
+		 * System.out.println("节点逻辑结构树");
+		 * System.out.println(listNodePrepare.getNodeTree
+		 * ().iteratorTree(listNodePrepare.getNodeTree().getTreeNode()));
+		 */
 		// 监听预警音乐是否播放
 		Runnable runnable = new Runnable() {
 			@Override
