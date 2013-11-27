@@ -8,6 +8,8 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" >
+    </uses-permission>
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -28,10 +30,17 @@
             android:name="senseHuge.gateway.service.FileChooserActivity"
             android:label="@string/title_activity_file_chooser" >
         </activity>
+
         <provider
             android:name="senseHuge.gateway.service.DataProvider"
             android:authorities="senseHuge.gateway.service"
             android:exported="false" />
+
+        <receiver android:name="senseHuge.gateway.service.BootBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
