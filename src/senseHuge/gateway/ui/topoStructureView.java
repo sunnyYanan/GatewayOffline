@@ -24,7 +24,7 @@ import android.view.View;
 
 import com.example.testgateway.R;
 
-public class TopoStructureView extends View {
+public class topoStructureView extends View {
 	private Paint linePaint = new Paint();// 节点连线
 	private Paint textPaint = new Paint();// 文字
 	private float screenW, screenH;
@@ -155,17 +155,17 @@ public class TopoStructureView extends View {
 		textPaint.setTextSize(15);
 	}
 
-	public TopoStructureView(Context context) {
+	public topoStructureView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 	}
 
-	public TopoStructureView(Context context, AttributeSet attrs) {
+	public topoStructureView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 	}
 
-	public TopoStructureView(Context context, AttributeSet attrs,
+	public topoStructureView(Context context, AttributeSet attrs,
 			int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		// TODO Auto-generated constructor stub
