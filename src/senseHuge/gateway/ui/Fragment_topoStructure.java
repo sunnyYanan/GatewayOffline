@@ -12,14 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class Fragment_topoStructure extends Fragment {
-	topoStructureView nodeView;
+	TopoStructureView nodeView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_topo_structure,
 				container, false);
-		nodeView = (topoStructureView) view.findViewById(R.id.topoStructureView);
+		nodeView = (TopoStructureView) view.findViewById(R.id.topoStructureView);
 		if (MainActivity.serialPortConnect)
 			new Thread(new MyThread()).start();
 		

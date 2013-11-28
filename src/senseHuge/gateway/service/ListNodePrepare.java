@@ -116,6 +116,7 @@ public class ListNodePrepare {
 			addNodeIntoList(Fragment_listNode.nodeId.get(i));
 		}
 		cursor.close();
+		db.close();
 	}
 
 	// 将节点加入到显示列表中
