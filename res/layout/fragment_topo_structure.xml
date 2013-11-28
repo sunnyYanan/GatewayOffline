@@ -14,7 +14,7 @@
     android:layout_height="fill_parent"
     android:fillViewport="true" >
 
-    <senseHuge.gateway.ui.topoStructureView
+    <senseHuge.gateway.ui.TopoStructureView
         android:id="@+id/topoStructureView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />

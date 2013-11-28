@@ -24,13 +24,15 @@ import android.view.View;
 
 import com.example.testgateway.R;
 
-public class topoStructureView extends View {
+public class TopoStructureView extends View {
 	private Paint linePaint = new Paint();// 节点连线
 	private Paint textPaint = new Paint();// 文字
+	private Paint circelPaint = new Paint();// 包
 	private float screenW, screenH;
 	private NodeTree nodeTree = ListNodePrepare.nodeTree;
 	private List<String> nodeNamePosition;
 	private List<float[]> nodePosition;
+	float px, py;
 
 	@SuppressLint("DrawAllocation")
 	@Override
@@ -41,6 +43,8 @@ public class topoStructureView extends View {
 
 		screenW = this.getWidth();
 		screenH = this.getHeight();
+		px = 0;
+		py = 0;
 		nodePosition = new ArrayList<float[]>();
 		nodeNamePosition = new ArrayList<String>();
 
@@ -72,6 +76,7 @@ public class topoStructureView extends View {
 		}
 	}
 
+	// 一层一层的画节点
 	private void draw(List<TreeNode> list, int layer, Canvas canvas) {
 		// TODO Auto-generated method stub
 		Resources res = getResources();
@@ -85,7 +90,7 @@ public class topoStructureView extends View {
 		int num = list.size();
 		float wInterval = screenW / (num + 1);
 		float hInterval = 70;
-		int startPos = 0;// 当当前行节点ID有重复时避免路线有误的措施
+		// int startPos = 0;// 当当前行节点ID有重复时避免路线有误的措施
 
 		System.out.println("第" + layer + "层");
 		List<String> nodeNamePositionTemp = new ArrayList<String>();
@@ -112,31 +117,36 @@ public class topoStructureView extends View {
 			float[] temp = new float[2];
 			temp[0] = left + leftOffset;// 横坐标
 			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
-			System.out.println(nodeName + "坐标是：" + temp[0] + " " + temp[1]);
 			nodeNamePosition.add(nodeName);
 			nodePosition.add(temp);
 
 			// 找到父节点的坐标
 			if (!nodeName.equals("0000")) {
-				String parentName = nodeTree.findNodeParentByName(nodeName)
-						.getNode().getName();
-				System.out.println(nodeName + "的爸爸是" + parentName);
-				for (int j = startPos; j < nodePositionTemp.size(); j++) {
-					if (nodeNamePositionTemp.get(j).equals(parentName)) {
-						float[] parent = new float[2];
-						if (j == nodePositionTemp.size() - 2)
-							startPos = nodePositionTemp.size() - 1;
-						else
-							startPos = j;
-						parent = nodePositionTemp.get(j);
-						canvas.drawLine(left + leftOffset, top, parent[0],
-								parent[1], linePaint);
-						break;
+				List<TreeNode> parent = nodeTree.findNodeParentByName(nodeName, layer);
+				List<String> parentName = new ArrayList<String>();
+				for (int k = 0; k < parent.size(); k++) {
+					parentName.add(parent.get(k).getNode().getName());
+					System.out.println(nodeName + "的第" + k + "个爸爸是"
+							+ parent.get(k).getNode().getName());
+				}
+				for (int k = 0; k < parentName.size(); k++) {
+					for (int j = 0; j < nodePositionTemp.size(); j++) {
+						if (nodeNamePositionTemp.get(j).equals(
+								parentName.get(k))) {
+							float[] parentPosition = new float[2];
+							parentPosition = nodePositionTemp.get(j);
+							canvas.drawLine(left + leftOffset, top,
+									parentPosition[0], parentPosition[1],
+									linePaint);
+							break;
+						}
 					}
 				}
 
 			}
 		}
+
+		canvas.drawCircle(px, py, 5, circelPaint);
 
 	}
 
@@ -153,19 +163,24 @@ public class topoStructureView extends View {
 		textPaint.setAntiAlias(true);// 锯齿不显示
 		textPaint.setTextAlign(Align.CENTER);
 		textPaint.setTextSize(15);
+
+		circelPaint.setStyle(Style.FILL);
+		circelPaint.setStrokeWidth(2);
+		circelPaint.setColor(Color.YELLOW);
+		circelPaint.setAntiAlias(true);
 	}
 
-	public topoStructureView(Context context) {
+	public TopoStructureView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 	}
 
-	public topoStructureView(Context context, AttributeSet attrs) {
+	public TopoStructureView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 	}
 
-	public topoStructureView(Context context, AttributeSet attrs,
+	public TopoStructureView(Context context, AttributeSet attrs,
 			int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		// TODO Auto-generated constructor stub
