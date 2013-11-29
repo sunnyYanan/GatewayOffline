@@ -6,6 +6,7 @@ import java.util.List;
 public class TreeNode {
 	private Node node;
 	private List<TreeNode> childTree;
+	 
 
 	public Node getNode() {
 		return node;

@@ -5,15 +5,23 @@ import java.util.List;
 
 public class NodeTree {
 	private TreeNode root;
+	public static List<TreeNode> curPath = new ArrayList<TreeNode>();
+	public static boolean pathComplete;
 
 	public NodeTree() {
 		root = new TreeNode();
 		root.getNode().setName("0000");
+		root.getNode().setLayer(0);
+		root.getNode().setNumber(0);
 	}
 
 	public void insert(List<String> path) {
+		pathComplete = false;
+		curPath.clear();
 		TreeNode currentNode = root;
+		curPath.add(currentNode);
 		TreeNode backup;
+		int layer = 1;
 		for (int i = path.size() - 1; i >= 0; i--) {
 			String curNodeName = path.get(i);
 			backup = currentNode.findChildByName(curNodeName);
@@ -22,34 +30,71 @@ public class NodeTree {
 			} else {
 				if (this.contains(curNodeName)) { // 原来树中是否包含 当前 节点（ID 为integer）
 					TreeNode my = findNodeByName(curNodeName);
+					my.getNode().setLayer(layer);
+					int number = getCurLayerNodeNum(layer);
+					my.getNode().setNumber(number);
 					TreeNode parent = findNodeParentByName(curNodeName);
 					currentNode.getChildTree().add(my);
 					parent.deleteChildByName(curNodeName);
 					currentNode = my;
-					
+
 					/**
-					 *   如  1 --》2 --》3----》5  变成    1--》5
-					 *  current       parent  my
-					 *  
-					 *  my连接到1后面     3号删除5的连接
-					 *   
+					 * 如 1 --》2 --》3----》5 变成 1--》5 current parent my
+					 * 
+					 * my连接到1后面 3号删除5的连接
+					 * 
 					 */
-				}else {//新节点直接插入
+				} else {// 新节点直接插入
 					TreeNode newNode = new TreeNode();
 					newNode.getNode().setName(curNodeName);
+					newNode.getNode().setLayer(layer);
+					newNode.getNode().setNumber(getCurLayerNodeNum(layer));
+
 					if (currentNode.getChildTree() == null) {
 						currentNode.setChildTree(new ArrayList<TreeNode>());
 					}
 					currentNode.getChildTree().add(newNode);
 					currentNode = newNode;
-					
 				}
-			
+
 			}
-		
+			curPath.add(currentNode);
+			layer++;
+
+		}
+		pathComplete = true;
+		for (int i = 0; i < curPath.size(); i++) {
+			System.out.println("层级结构 " + curPath.get(i).getNode().getName());
 		}
 	}
 
+	private int getCurLayerNodeNum(int layer) {
+		// TODO Auto-generated method stub
+		int temp = 0;
+		boolean flag = true;
+		List<TreeNode> parent = new ArrayList<TreeNode>();
+		List<TreeNode> child = new ArrayList<TreeNode>();
+		parent.add(root);
+		while (flag) {
+			if (temp == layer) {
+				flag = false;
+
+			} else {
+				temp++;
+				child.clear();
+				for (int i = 0; i < parent.size(); i++) {
+					for (TreeNode node : parent.get(i).getChildTree()) {
+						child.add(node);
+					}
+				}
+				parent.clear();
+				for (int i = 0; i < child.size(); i++) {
+					parent.add(child.get(i));
+				}
+			}
+		}
+		return parent.size();
+	}
 
 	public TreeNode findNodeParentByName(String curNodeName) {
 		// TODO Auto-generated method stub
@@ -75,7 +120,7 @@ public class NodeTree {
 		return null;
 	}
 
-	private TreeNode findNodeByName(String curNodeName) {
+	public TreeNode findNodeByName(String curNodeName) {
 		// TODO Auto-generated method stub
 		return findNodeByName(curNodeName, root);
 	}
@@ -84,7 +129,7 @@ public class NodeTree {
 		// TODO Auto-generated method stub
 		for (TreeNode index : current.getChildTree()) {
 
-			if (index.getNode().getName()==(curNodeName)) {
+			if (index.getNode().getName() == (curNodeName)) {
 				return index;
 			}
 

@@ -429,7 +429,7 @@ public class ListNodePrepare {
 						.parseTelosbPackage(message);
 				getPath(path, mpp);// 得到当前节点C1包的传播路径
 				for (int i = 0; i < path.size(); i++) {
-					System.out.println("path:" + i + " " + path.get(i));
+					System.out.println("包的path:" + i + " " + path.get(i));
 				}
 				nodeTree.insert(path);
 			} catch (Exception e) {
