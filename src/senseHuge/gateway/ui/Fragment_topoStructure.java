@@ -42,59 +42,55 @@ public class Fragment_topoStructure extends Fragment {
 			super.handleMessage(msg);
 			switch (msg.arg1) {
 			case 1:
-				if (ListNodePrepare.changed && NodeTree.pathComplete) {
-					Thread draw = new Thread(new DrawThread());
-					draw.start();
+				if (ListNodePrepare.changed) {
+					// Thread draw = new Thread(new DrawThread());
+					// draw.start();
 				}
-			case 2:
-				update();
+				if (NodeTree.pathComplete) {
+					List<TreeNode> temp = new ArrayList<TreeNode>();// 包的路径
+					for (int i = NodeTree.curPath.size() - 1; i >= 0; i--) {
+						temp.add(NodeTree.curPath.get(i));
+						System.out.println("当前路径：" + i + " "
+								+ temp.get(i).getNode().getName());
+					}
+					StringBuffer str = new StringBuffer();
+					for(int i=0; i<temp.size(); i++) {
+						str.append(temp.get(i).getNode().getName()+" ");
+					}
+					nodeView.path = str.toString();
+					
+				}
+				// case 2:
+				// update();
+				nodeView.invalidate();
 			}
-				
 
 		}
 
 	};
-	public class DrawThread implements Runnable {
 
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			Message message = new Message();
-			message.arg1 = 2;
-			handler.sendMessage(message);// 发送消息
-		}
-		
-	}
-	
-	private void update() {
-		// TODO Auto-generated method stub
-		List<TreeNode> temp = new ArrayList<TreeNode>();
-		for(int i=temp.size()-1; i>=0; i--) {
-			temp.add(NodeTree.curPath.get(i));
-			System.out.println("当前路径："+i+" "+temp.get(i).getNode().getName());
-		}
-		for (int i = 0; i < temp.size(); i++) {
-			float[] pos = temp.get(i).getNode().getPosition();
-			nodeView.px = pos[0];
-			nodeView.py = pos[1];
-			nodeView.invalidate();
-		}
-	}
+	// public class DrawThread implements Runnable {
+	//
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// Message message = new Message();
+	// message.arg1 = 2;
+	// handler.sendMessage(message);// 发送消息
+	// }
+	//
+	// }
 
 	public class MyThread implements Runnable {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
 			while (true) {
-				try {
-					Thread.sleep(1000);// 线程暂停2秒，单位毫秒
-					Message message = new Message();
-					message.arg1 = 1;
-					handler.sendMessage(message);// 发送消息
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				// Thread.sleep(1000);// 线程暂停2秒，单位毫秒
+				Message message = new Message();
+				message.arg1 = 1;
+				handler.sendMessage(message);// 发送消息
+
 			}
 		}
 	}

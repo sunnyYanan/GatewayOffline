@@ -33,6 +33,7 @@ public class TopoStructureView extends View {
 	private List<String> nodeNamePosition;
 	private List<float[]> nodePosition;
 	float px = 0, py = 0;
+	String path = "";
 
 	@SuppressLint("DrawAllocation")
 	@Override
@@ -73,23 +74,30 @@ public class TopoStructureView extends View {
 			layer++;
 		}
 
-//		printNodePosition();
+		// printNodePosition();
 		// 画当前包的运动
-		canvas.drawCircle(px, py, 5, circlePaint);
+		canvas.drawText(path, 10, 10, textPaint);
+		//(px, py, 5, circlePaint);
+//		if (NodeTree.pathComplete) {
+//			update();
+//		}
 	}
 
-/*	private void printNodePosition() {
-		// TODO Auto-generated method stub
-		NodeTree tree = ListNodePrepare.nodeTree;
-		TreeNode root = tree.getTreeNode();
-		for (TreeNode temp : root.getChildTree()) {
-			System.out.println(temp.getNode().getName() + "在第几层"
-					+ temp.getNode().getLayer() + "第几个"
-					+ temp.getNode().getNumber() + "坐标"
-					+ (temp.getNode().getPosition())[0] + " "
-					+ (temp.getNode().getPosition())[1]);
-		}
-	}*/
+//	private void update() {
+//		// TODO Auto-generated method stub
+//		List<TreeNode> temp = new ArrayList<TreeNode>();// 包的路径
+//		for (int i = NodeTree.curPath.size() - 1; i >= 0; i--) {
+//			temp.add(NodeTree.curPath.get(i));
+//			System.out.println("当前路径：" + i + " "
+//					+ temp.get(i).getNode().getName());
+//		}
+//		for (int i = 0; i < temp.size(); i++) {
+//			float[] pos = temp.get(i).getNode().getPosition();
+//			px = pos[0];
+//			py = pos[1];
+//			invalidate();
+//		}
+//	}
 
 	// 一层一层的画节点
 	private void draw(List<TreeNode> list, int layer, Canvas canvas) {
@@ -132,12 +140,12 @@ public class TopoStructureView extends View {
 			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
 			nodeNamePosition.add(nodeName);
 			nodePosition.add(temp);
-			System.out.println(nodeName + "的坐标是：" + temp[0] + " " + temp[1]);
+			// System.out.println(nodeName + "的坐标是：" + temp[0] + " " + temp[1]);
 			TreeNode aa = nodeTree.findNodeByName(nodeName);
 			if (nodeName.endsWith("0000"))
 				nodeTree.getTreeNode().getNode().setPosition(temp);
-			if (nodeTree.findNodeByName(nodeName) != null)
-				nodeTree.findNodeByName(nodeName).getNode().setPosition(temp);
+			if (aa != null)
+				aa.getNode().setPosition(temp);
 
 			// 找到父节点的坐标
 			if (!nodeName.equals("0000")) {
@@ -146,10 +154,10 @@ public class TopoStructureView extends View {
 				for (int j = startPos; j < nodePositionTemp.size(); j++) {
 					if (nodeNamePositionTemp.get(j).equals(parentName)) {
 						float[] parent = new float[2];
-						if (j == nodePositionTemp.size() - 2)
-							startPos = nodePositionTemp.size() - 1;
-						else
-							startPos = j;
+						// if (j == nodePositionTemp.size() - 2)
+						// startPos = nodePositionTemp.size() - 1;
+						// else
+						startPos = j;
 						parent = nodePositionTemp.get(j);
 						canvas.drawLine(left + leftOffset, top, parent[0],
 								parent[1], linePaint);

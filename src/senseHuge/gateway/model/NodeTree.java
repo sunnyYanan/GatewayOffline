@@ -6,7 +6,7 @@ import java.util.List;
 public class NodeTree {
 	private TreeNode root;
 	public static List<TreeNode> curPath = new ArrayList<TreeNode>();
-	public static boolean pathComplete;
+	public static boolean pathComplete = false;
 
 	public NodeTree() {
 		root = new TreeNode();
