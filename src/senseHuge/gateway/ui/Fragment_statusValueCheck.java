@@ -136,9 +136,12 @@ public class Fragment_statusValueCheck extends Fragment {
 				String value = getTypeValue(mpp);
 				if (value != null) {
 					float curData = transformValue(value, mpp);
-					dataTemp.add(curData);
-					xLabelTemp.add(time);
-					num--;
+					if (curData != -100) {
+						dataTemp.add(curData);
+						xLabelTemp.add(time);
+						num--;
+					}
+
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -177,8 +180,9 @@ public class Fragment_statusValueCheck extends Fragment {
 					.getString(cursor.getColumnIndex("receivetime"));
 			List<Integer> curDate = new ArrayList<Integer>();
 			getDate(curDate, time);
-			if (findIt(inputDate, curDate)) {//找到比当前输入日期小的那条记录
-				String message = cursor.getString(cursor.getColumnIndex("message"));
+			if (findIt(inputDate, curDate)) {// 找到比当前输入日期小的那条记录
+				String message = cursor.getString(cursor
+						.getColumnIndex("message"));
 				try {
 					// 解析后的数据
 					PackagePattern mpp = MainActivity.xmlTelosbPackagePatternUtil
@@ -196,7 +200,7 @@ public class Fragment_statusValueCheck extends Fragment {
 				break;
 			}
 		}
-		int num = 14;//显示用户输入日期之前的15条记录
+		int num = 14;// 显示用户输入日期之前的15条记录
 		while (cursor.moveToNext() && num > 0) {
 			String message = cursor.getString(cursor.getColumnIndex("message"));
 			String time = cursor
@@ -282,11 +286,14 @@ public class Fragment_statusValueCheck extends Fragment {
 
 	private float transformValue(String value, PackagePattern mpp) {
 		// TODO Auto-generated method stub
-		float transValue = 0;
+		float transValue = -100;
 		System.out.println(curShowType + " before:" + value);
 		float beforeTran = hex2Dec(value);
 		if (curShowType == TEMPERATURE) {
 			transValue = (float) (beforeTran * 0.01 - 40);
+			if(transValue>=-40&&transValue<=123.8){}
+			else 
+				transValue = -100;
 		} else if (curShowType == HUMIDITY) {
 			// float temp = hex2Dec(value);
 			float humidity_temp = (float) (-4 + 0.0405 * beforeTran - 2.8
@@ -300,11 +307,20 @@ public class Fragment_statusValueCheck extends Fragment {
 				transValue = (float) ((curTemperature - 25)
 						* (0.01 + 0.00008 * beforeTran) + humidity_temp);
 			}
+			if(transValue>=0&&transValue<=100){
+			}else
+				transValue = -100;
 
 		} else if (curShowType == CO2) {
 			transValue = beforeTran;
+			if(transValue>=0&&transValue<=5000){}
+			else
+				transValue = -100;
 		} else if (curShowType == LIGHT) {
 			transValue = (float) (beforeTran * 0.085);
+			if(transValue>=0&&transValue<=10000){}
+			else
+				transValue = -100;
 		}
 		System.out.println(curShowType + " after:" + transValue);
 		return transValue;
