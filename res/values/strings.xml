@@ -15,7 +15,7 @@
     <string name="humidity">湿度</string>
     <string name="light">光照</string>
     <string name="co2">co2</string>
-    <string name="statusDateSet">时间查询</string>
+    <string name="statusDateSet">按时间查询</string>
     <string name="nodeSelectIns">节点选择：</string>
     <string name="itemNum">显示最近：</string>
     <string name="granularity">显示粒度：</string>
@@ -26,6 +26,11 @@
     <string name="music">语音文件：</string>
     <string name="musicSelect">选择文件</string>
     <string name="isAlertMusic">语音提醒:</string>
+    <string name="newAlertItem">新增预警:</string>
+    <string name="reset">重置</string>
+    <string name="addNewAlert">添加预警</string>
+    <string name="alertManulInputName">预警项目:</string>
+    <string name="alertManulInputValue">预警值:</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="refresh">刷新</string>
@@ -98,6 +103,10 @@
         <item>8</item>
         <item>9</item>
         <item>10</item>
+    </string-array>
+    <string-array name="newAlertManulInput">
+        <item>值</item>
+        <item>%</item>
     </string-array>
 
     <string name="title_activity_fragment_node_setting">Fragment_nodeSetting</string>

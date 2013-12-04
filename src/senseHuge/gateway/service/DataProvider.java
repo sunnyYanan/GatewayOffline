@@ -65,12 +65,13 @@ public class DataProvider extends ContentProvider {
 			getContext().getContentResolver().notifyChange(noteUri, null);
 			// 刷新listnode页面数据
 			String nodeId = arg1.get("NodeID").toString();
+			String message = arg1.get("message").toString();
+			String type =arg1.get("Ctype").toString();
 			if (!Fragment_listNode.nodeId.contains(nodeId)) {
 				Fragment_listNode.nodeId.add(nodeId);
 				Collections.sort(Fragment_listNode.nodeId);
 			}
-			nodePrepare.prepare(nodeId);
-			System.out.println("insert"+nodeId);
+			nodePrepare.prepare(nodeId,message,type);
 //			Fragment_listNode.adapter.notifyDataSetChanged();
 			return noteUri;
 		}
