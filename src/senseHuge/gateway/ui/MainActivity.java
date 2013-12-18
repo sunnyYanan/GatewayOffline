@@ -14,6 +14,7 @@ import senseHuge.gateway.model.TelosbPackage;
 import senseHuge.gateway.service.ListNodePrepare;
 import senseHuge.gateway.service.LocalConfigService;
 import senseHuge.gateway.util.OfflineBackupUtil;
+import senseHuge.gateway.util.SelectDialog;
 import senseHuge.gateway.util.XmlTelosbPackagePatternUtil;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -34,6 +35,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -71,6 +74,8 @@ public class MainActivity extends FragmentActivity {
 	Fragment f_serialPort, f_listnode, f_nodeSetting, f_dataCenter, f_aboutUs,
 			f_linkSetting, f_statusValueCheck, f_topoStructure;
 	Button serialPortSetting;
+	Button eternetSetting;
+	Button wifiSetting;
 	// Button serverSetting;
 	Button sinkSetting;
 	Button sinkCheck;
@@ -83,7 +88,7 @@ public class MainActivity extends FragmentActivity {
 	Button topoStructure;
 	Button aboutUs;
 	Button quit;
-	
+
 	PendingIntent m_restartIntent;
 
 	private UncaughtExceptionHandler m_handler = new UncaughtExceptionHandler() {
@@ -116,7 +121,7 @@ public class MainActivity extends FragmentActivity {
 		f_nodeSetting = new Fragment_nodeSetting();
 		f_dataCenter = new Fragment_dataCenter();
 		f_aboutUs = new Fragment_aboutUs();
-		f_linkSetting = new Fragment_linkSetting();
+		// f_linkSetting = new Fragment_linkSetting();
 		f_statusValueCheck = new Fragment_statusValueCheck();
 		f_topoStructure = new Fragment_topoStructure();
 
@@ -184,9 +189,26 @@ public class MainActivity extends FragmentActivity {
 
 			case R.id.linkSetting: {
 				// remember change
-				transaction = manager.beginTransaction();
-				transaction.replace(R.id.fragment_container, f_linkSetting);
-				transaction.commit();
+				// transaction = manager.beginTransaction();
+				// transaction.replace(R.id.fragment_container, f_linkSetting);
+				// transaction.commit();
+				SelectDialog selectDialog = new SelectDialog(MainActivity.this,
+						R.style.dialog);// 创建Dialog并设置样式主题
+				Window win = selectDialog.getWindow();
+				LayoutParams params = new LayoutParams();
+				params.x = -250;// 设置x坐标
+				params.y = -70;// 设置y坐标
+				win.setAttributes(params);
+				// win.setBackgroundDrawable(getResources().getDrawable(R.drawable.file_unknown)
+				// );
+				selectDialog.setCanceledOnTouchOutside(true);// 设置点击Dialog外部任意区域关闭Dialog
+				selectDialog.show();
+				
+//				View view =  View.inflate(MainActivity.this,R.layout.link_type, null);
+//				eternetSetting = (Button) view.findViewById(R.id.eternetSetting);
+//				wifiSetting = (Button) view.findViewById(R.id.wifiSetting);
+//				System.out.println("ddddd"+eternetSetting.getText());
+//				eternetSetting.setOnClickListener(new MyOnClickListener());
 				break;
 
 			}
@@ -224,6 +246,26 @@ public class MainActivity extends FragmentActivity {
 			}
 			}
 		}
+	}
+
+	private class MyOnClickListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.eternetSetting:
+				System.out.println("dakaile");
+//				startActivity(new Intent(
+//						android.provider.Settings.ACTION_SETTINGS));
+				break;
+			case R.id.wifiSetting:
+				startActivity(new Intent(
+						android.provider.Settings.ACTION_WIFI_SETTINGS));
+				break;
+			}
+		}
+
 	}
 
 	@Override
