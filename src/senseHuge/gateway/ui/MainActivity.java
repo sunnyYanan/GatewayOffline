@@ -196,11 +196,9 @@ public class MainActivity extends FragmentActivity {
 						R.style.dialog);// 创建Dialog并设置样式主题
 				Window win = selectDialog.getWindow();
 				LayoutParams params = new LayoutParams();
-				params.x = -250;// 设置x坐标
+				params.x = -230;// 设置x坐标
 				params.y = -70;// 设置y坐标
 				win.setAttributes(params);
-				// win.setBackgroundDrawable(getResources().getDrawable(R.drawable.file_unknown)
-				// );
 				selectDialog.setCanceledOnTouchOutside(true);// 设置点击Dialog外部任意区域关闭Dialog
 				selectDialog.show();
 				
@@ -246,26 +244,6 @@ public class MainActivity extends FragmentActivity {
 			}
 			}
 		}
-	}
-
-	private class MyOnClickListener implements View.OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			switch (v.getId()) {
-			case R.id.eternetSetting:
-				System.out.println("dakaile");
-//				startActivity(new Intent(
-//						android.provider.Settings.ACTION_SETTINGS));
-				break;
-			case R.id.wifiSetting:
-				startActivity(new Intent(
-						android.provider.Settings.ACTION_WIFI_SETTINGS));
-				break;
-			}
-		}
-
 	}
 
 	@Override

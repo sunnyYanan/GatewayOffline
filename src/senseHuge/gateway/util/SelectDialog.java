@@ -16,30 +16,50 @@ public class SelectDialog extends AlertDialog {
 	Button eternetSetting;
 	Button wifiSetting;
 	Context mContext;
-	
+
 	public SelectDialog(Context context, int theme) {
-	    super(context, theme);
-	    mContext = context;
+		super(context, theme);
+		mContext = context;
 	}
 
 	public SelectDialog(Context context) {
-	    super(context);
-	    mContext = context;
+		super(context);
+		mContext = context;
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.link_type);
-//	    LayoutInflater lay = (LayoutInflater) this.getLayoutInflater()getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		View v =  this.getLayoutInflater().inflate(R.layout.link_type, null);
-//		eternetSetting = (Button) v.findViewById(R.id.eternetSetting);
-//		wifiSetting = (Button) v.findViewById(R.id.wifiSetting);
-//		System.out.println("mingziL"+eternetSetting.getText());
-		
-//		eternetSetting.setOnClickListener(new MyOnClickListener());
-//		wifiSetting.setOnClickListener(new MyOnClickListener());
-//		setContentView(v);
+		super.onCreate(savedInstanceState);
+
+		View view = this.getLayoutInflater().inflate(R.layout.link_type, null);
+		setContentView(view);
+
+		eternetSetting = (Button) view.findViewById(R.id.eternetSetting);
+		wifiSetting = (Button) view.findViewById(R.id.wifiSetting);
+		System.out.println("mingziL" + eternetSetting.getText());
+
+		eternetSetting.setOnClickListener(new MyOnClickListener());
+		wifiSetting.setOnClickListener(new MyOnClickListener());
+
 	}
-	
+
+	private class MyOnClickListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.eternetSetting:
+				System.out.println("dakaile");
+				mContext.startActivity(new Intent(
+						android.provider.Settings.ACTION_SETTINGS));
+				break;
+			case R.id.wifiSetting:
+				mContext.startActivity(new Intent(
+						android.provider.Settings.ACTION_WIFI_SETTINGS));
+				break;
+			}
+		}
+
+	}
 }
