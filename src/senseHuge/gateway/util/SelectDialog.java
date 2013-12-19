@@ -36,7 +36,6 @@ public class SelectDialog extends AlertDialog {
 
 		eternetSetting = (Button) view.findViewById(R.id.eternetSetting);
 		wifiSetting = (Button) view.findViewById(R.id.wifiSetting);
-		System.out.println("mingziL" + eternetSetting.getText());
 
 		eternetSetting.setOnClickListener(new MyOnClickListener());
 		wifiSetting.setOnClickListener(new MyOnClickListener());
@@ -50,7 +49,6 @@ public class SelectDialog extends AlertDialog {
 			// TODO Auto-generated method stub
 			switch (v.getId()) {
 			case R.id.eternetSetting:
-				System.out.println("dakaile");
 				mContext.startActivity(new Intent(
 						android.provider.Settings.ACTION_SETTINGS));
 				break;

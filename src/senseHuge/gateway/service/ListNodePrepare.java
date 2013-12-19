@@ -453,7 +453,7 @@ public class ListNodePrepare {
 		}
 		for (int i = 0; i < node.length() - 4; i = i + 4) {
 			String str = node.substring(i, i + 4);
-			System.out.println(str);
+			System.out.println("包路径加入："+str);
 			if (!str.equals("0000") && isValid(str)) {
 				path.add(str);
 			} else {
@@ -462,6 +462,7 @@ public class ListNodePrepare {
 		}
 		int half = (path.size() - 1) / 2;
 		int num = repeatPosition(path, half);
+		System.out.println("重复位置："+num);
 		if (num != 0)
 			removeRepeat(path, num);
 	}
@@ -480,7 +481,7 @@ public class ListNodePrepare {
 	private int repeatPosition(List<String> path, int pos) {
 		// TODO Auto-generated method stub
 		int num = pos;
-		if (pos == 0)
+		if (pos == 1)
 			return 0;
 		for (int i = 1; i < pos; i++) {
 			if (!path.get(i).equals(path.get(i + pos))) {

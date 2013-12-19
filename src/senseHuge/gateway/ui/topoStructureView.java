@@ -112,7 +112,6 @@ public class topoStructureView extends View {
 			float[] temp = new float[2];
 			temp[0] = left + leftOffset;// 横坐标
 			temp[1] = top + bmp.getHeight() + 9;// 纵坐标
-			System.out.println(nodeName + "坐标是：" + temp[0] + " " + temp[1]);
 			nodeNamePosition.add(nodeName);
 			nodePosition.add(temp);
 
@@ -124,9 +123,9 @@ public class topoStructureView extends View {
 				for (int j = startPos; j < nodePositionTemp.size(); j++) {
 					if (nodeNamePositionTemp.get(j).equals(parentName)) {
 						float[] parent = new float[2];
-						if (j == nodePositionTemp.size() - 2)
-							startPos = nodePositionTemp.size() - 1;
-						else
+//						if (j == nodePositionTemp.size() - 2)
+//							startPos = nodePositionTemp.size() - 1;
+//						else
 							startPos = j;
 						parent = nodePositionTemp.get(j);
 						canvas.drawLine(left + leftOffset, top, parent[0],
